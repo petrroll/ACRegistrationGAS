@@ -1,3 +1,23 @@
+function getFormID(formSubmitObj){
+  var formIdConfig = getFormIdConfig();
+  var configUniqueQuestion = formIdConfig['UniqueQuestionFormIdTest'];
+
+  var formID = '';
+  var eventsNamedValues = formSubmitObj.namedValues;
+  
+  if(eventsNamedValues.hasOwnProperty(configUniqueQuestion['CZ'])){
+    formID = 'CZ';
+  }
+  else if (eventsNamedValues.hasOwnProperty(configUniqueQuestion['EN'])){
+    formID = 'EN';
+  }
+  else {
+    formID = 'ERR';
+  }
+  
+  return formID;
+}
+
 function addDays(date, days) {
     var result = new Date(date);
     result.setDate(result.getDate() + days);

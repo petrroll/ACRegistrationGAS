@@ -1,9 +1,7 @@
 function onFormSubmit(formSubmitObj) {
   Logger.log('On form submited fired.')
 
-  var config = getConfig();
-
-  var formID = getFormID(formSubmitObj, config);
+  var formID = getFormID(formSubmitObj);
   Logger.log('Form id is:' + formID)
 
   if(formID != 'ERR'){
@@ -14,30 +12,12 @@ function onFormSubmit(formSubmitObj) {
   
 }
 
-function getFormID(formSubmitObj, config){
-
-  var formID = '';
-  var eventsNamedValues = formSubmitObj.namedValues;
-  
-  if(eventsNamedValues.hasOwnProperty(config['FirstQuestionCZ'])){
-    formID = 'CZ';
-  }
-  else if (eventsNamedValues.hasOwnProperty(config['FirstQuestionEN'])){
-    formID = 'EN';
-  }
-  else {
-    formID = 'ERR';
-  }
-  
-  return formID;
-}
-
 function workOnSendingEmail(formSubmitObj, formID) {
-  //Could do a switch statement but don't think it's neccessary now as I have only two form IDs
-  var formConfig = (formID == 'CZ') ? getFormConfigCZ() : getFormConfigEN(); 
+
+  var translationConfig = getTranslationConfig(formID);
   var priceConfig = getPriceConfig();
 
-  var batchesInfo = getBatchesInfo(formSubmitObj, formConfig);
+  var batchesInfo = getBatchesInfo(formSubmitObj, translationConfig);
   var priceAccomodInfo = getAccomodationPrice(batchesInfo, priceConfig);
   var priceInsuranceInfo = getInsurancePrice(batchesInfo, priceConfig);
 
@@ -46,19 +26,21 @@ function workOnSendingEmail(formSubmitObj, formID) {
   Logger.log(priceInsuranceInfo);
 }
 
-function getBatchesInfo(formSubmitObj, formConfig){
-  var batchesConfig = formConfig['BatchesQuestion'];
+function getBatchesInfo(formSubmitObj, translationConfig){
+  var batchesConfig = getBatchesConfig();
+  var batchesTranslation = translationConfig['BatchesQuestion'];
 
-  var rawResponse = formSubmitObj.namedValues[batchesConfig['Title']];
+  var rawResponse = formSubmitObj.namedValues[batchesTranslation['Title']];
   var hrString = rawResponse;
  
   var responses = rawResponse[0].split(", ");
   var batchesInfo = [];
 
   //Translates batch answers to batch ids
-  var answersConfig = batchesConfig['Answers'];
+  var answersTranslation = batchesTranslation['Answers'];
   for (var i = 0; i < responses.length; ++i) {
-    var batchInfo = answersConfig[responses[i]];
+    var batchIndex = answersTranslation[responses[i]];
+    var batchInfo = batchesConfig[batchIndex];
 
     if(batchInfo == null) {/*TODO: Do error handling*/}
     else { batchesInfo.push(batchInfo); }   
@@ -70,6 +52,7 @@ function getBatchesInfo(formSubmitObj, formConfig){
   var batchSegments = [];
   for(var i = 0; i < batchesInfo.length; ++i){
 
+    //If there was a gap between two batches
     if(batchesInfo[i]['Id'] - lastBatchId > 1){
       batchSegments.push([]);
     }
