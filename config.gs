@@ -27,5 +27,9 @@ function getPriceConfig(){
         "AccomodFirstWeekEUR":95,
         "AccomodNextWeeksCZK":650,
         "AccomodNextWeeksEUR":25,
+        "InsurancePerDayCZK":15,
+        "InsurancePerDayEUR":0.5,
+        //How many days should be added for transport
+        "InsuranceDaysForTransport":1
     }
 }

@@ -39,8 +39,11 @@ function workOnSendingEmail(formSubmitObj, formID) {
 
   var batchesInfo = getBatchesInfo(formSubmitObj, formConfig);
   var priceAccomodInfo = getAccomodationPrice(batchesInfo, priceConfig);
+  var priceInsuranceInfo = getInsurancePrice(batchesInfo, priceConfig);
+
   Logger.log(batchesInfo);
   Logger.log(priceAccomodInfo);
+  Logger.log(priceInsuranceInfo);
 }
 
 function getBatchesInfo(formSubmitObj, formConfig){
@@ -96,4 +99,20 @@ function getAccomodationPrice(batchesInfo, priceConfig){
     'priceEUR' : priceEUR,
     'priceCZK' : priceCZK,
   };
+}
+
+function getInsurancePrice(batchesInfo, priceConfig){
+  var numberOfTransports =  (batchesInfo.batchSegments.length * 2)
+  var daysInTransport = numberOfTransports * priceConfig['InsuranceDaysForTransport'];
+  var daysInAlbania = 7 * batchesInfo.numberOfBatches;
+  
+  var daysUnderInsurance = daysInAlbania + daysInTransport;
+
+  var priceCZK = priceConfig['InsurancePerDayCZK'] * daysUnderInsurance;
+  var priceEUR = priceConfig['InsurancePerDayEUR'] * daysUnderInsurance;
+
+  return {
+    'priceEUR' : priceEUR,
+    'priceCZK' : priceCZK,
+  }
 }
