@@ -14,6 +14,8 @@ function getFormConfigCZ(){
                 "2. turnus":2,
                 "3. turnus":3,
                 "4. turnus":4,
+                "5. turnus":5,
+                "6. turnus":6,
             },
         },
     }

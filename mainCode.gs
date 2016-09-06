@@ -52,6 +52,7 @@ function getBatchesInfo(formSubmitObj, formConfig){
   var responses = rawResponse[0].split(", ");
   var batchIDs = [];
 
+  //Translates batch answers to batch ids
   var answersConfig = batchesConfig['Answers'];
   for (var i = 0; i < responses.length; ++i) {
     var batchID = answersConfig[responses[i]];
@@ -60,15 +61,33 @@ function getBatchesInfo(formSubmitObj, formConfig){
     else { batchIDs.push(batchID); }   
   }
 
+  //Figures out individual uninterupted batch segments
+  var lastBatchId = -1;
+  var numberOfBatches = 0;
+  var batchSegments = [];
+  for(var i = 0; i < batchIDs.length; ++i){
+
+    if(batchIDs[i] - lastBatchId > 1){
+      batchSegments.push([]);
+    }
+
+    var lastBatchSegment = batchSegments[batchSegments.length-1];
+    lastBatchSegment.push(batchIDs[i]);
+    lastBatchId = batchIDs[i];
+
+    ++numberOfBatches;
+  }
+
   return {
-    'batches' : batchIDs,
+    'batchSegments' : batchSegments,
+    'numberOfBatches' : numberOfBatches,
     'hrString' : hrString,
   }
 
 }
 
 function getAccomodationPrice(batchesInfo, priceConfig){
-  var numberOfBatches = batchesInfo.batches.length;
+  var numberOfBatches = batchesInfo.numberOfBatches;
 
   var priceCZK = priceConfig['AccomodFirstWeekCZK'] + (numberOfBatches - 1) * priceConfig['AccomodNextWeeksCZK'];
   var priceEUR = priceConfig['AccomodFirstWeekEUR'] + (numberOfBatches - 1) * priceConfig['AccomodNextWeeksEUR'];
