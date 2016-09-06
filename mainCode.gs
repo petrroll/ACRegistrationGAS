@@ -53,30 +53,30 @@ function getBatchesInfo(formSubmitObj, formConfig){
   var hrString = rawResponse;
  
   var responses = rawResponse[0].split(", ");
-  var batchIDs = [];
+  var batchesInfo = [];
 
   //Translates batch answers to batch ids
   var answersConfig = batchesConfig['Answers'];
   for (var i = 0; i < responses.length; ++i) {
-    var batchID = answersConfig[responses[i]];
+    var batchInfo = answersConfig[responses[i]];
 
-    if(batchID == null) {/*TODO: Do error handling*/}
-    else { batchIDs.push(batchID); }   
+    if(batchInfo == null) {/*TODO: Do error handling*/}
+    else { batchesInfo.push(batchInfo); }   
   }
 
   //Figures out individual uninterupted batch segments
   var lastBatchId = -1;
   var numberOfBatches = 0;
   var batchSegments = [];
-  for(var i = 0; i < batchIDs.length; ++i){
+  for(var i = 0; i < batchesInfo.length; ++i){
 
-    if(batchIDs[i] - lastBatchId > 1){
+    if(batchesInfo[i]['Id'] - lastBatchId > 1){
       batchSegments.push([]);
     }
 
     var lastBatchSegment = batchSegments[batchSegments.length-1];
-    lastBatchSegment.push(batchIDs[i]);
-    lastBatchId = batchIDs[i];
+    lastBatchSegment.push(batchesInfo[i]);
+    lastBatchId = batchesInfo[i]['Id'];
 
     ++numberOfBatches;
   }
@@ -92,8 +92,8 @@ function getBatchesInfo(formSubmitObj, formConfig){
 function getAccomodationPrice(batchesInfo, priceConfig){
   var numberOfBatches = batchesInfo.numberOfBatches;
 
-  var priceCZK = priceConfig['AccomodFirstWeekCZK'] + (numberOfBatches - 1) * priceConfig['AccomodNextWeeksCZK'];
-  var priceEUR = priceConfig['AccomodFirstWeekEUR'] + (numberOfBatches - 1) * priceConfig['AccomodNextWeeksEUR'];
+  var priceCZK = priceConfig['AccomodFirstBatchCZK'] + (numberOfBatches - 1) * priceConfig['AccomodNextBatchesCZK'];
+  var priceEUR = priceConfig['AccomodFirstBatchEUR'] + (numberOfBatches - 1) * priceConfig['AccomodNextBatchesEUR'];
 
   return {
     'priceEUR' : priceEUR,
@@ -102,17 +102,32 @@ function getAccomodationPrice(batchesInfo, priceConfig){
 }
 
 function getInsurancePrice(batchesInfo, priceConfig){
-  var numberOfTransports =  (batchesInfo.batchSegments.length * 2)
-  var daysInTransport = numberOfTransports * priceConfig['InsuranceDaysForTransport'];
-  var daysInAlbania = 7 * batchesInfo.numberOfBatches;
-  
-  var daysUnderInsurance = daysInAlbania + daysInTransport;
+  var batchSegments = batchesInfo.batchSegments;
+  var daysUnderInsurance = 0;
+
+  var fromToString = [];
+
+  for(var i = 0; i < batchSegments.length; ++i){
+    var currSegment = batchSegments[i];
+    var hrCurrSegment = '';
+
+    var inAlbaniaStarts = currSegment[0]['Starts'];
+    var inAlbaniaEnds = currSegment[currSegment.length - 1]['Ends'];
+
+    var insuranceStarts = addDays(inAlbaniaStarts, -priceConfig['InsuranceDaysForTransport']);
+    var insuranceEnds = addDays(inAlbaniaEnds, priceConfig['InsuranceDaysForTransport']);
+    
+    daysUnderInsurance += dayDiff(insuranceStarts, insuranceEnds);
+    fromToString.push(dateTimeToLimitedString(insuranceStarts) + '->' + dateTimeToLimitedString(insuranceEnds));
+  }
 
   var priceCZK = priceConfig['InsurancePerDayCZK'] * daysUnderInsurance;
   var priceEUR = priceConfig['InsurancePerDayEUR'] * daysUnderInsurance;
 
+  var hrFromTo = fromToString.join(', ');
   return {
     'priceEUR' : priceEUR,
     'priceCZK' : priceCZK,
+    'hrFromTo' : hrFromTo,
   }
 }

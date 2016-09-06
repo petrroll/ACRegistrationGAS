@@ -4,6 +4,11 @@ function addDays(date, days) {
     return result;
 }
 
+function dayDiff(first, second) {
+    return Math.round((second-first)/(1000*60*60*24)) + 1;
+}
+
+
  function dateTimeToFullString(date) {
     var now     = date; 
     var year    = now.getFullYear().toString();
