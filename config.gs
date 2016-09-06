@@ -15,6 +15,15 @@ function getFormConfigCZ(){
                 "3. turnus":3,
                 "4. turnus":4,
             },
-    },
+        },
+    }
+}
+
+function getPriceConfig(){
+    return {
+        "AccomodFirstWeekCZK":2600,
+        "AccomodFirstWeekEUR":95,
+        "AccomodNextWeeksCZK":650,
+        "AccomodNextWeeksEUR":25,
     }
 }
