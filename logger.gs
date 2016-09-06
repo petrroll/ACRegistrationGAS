@@ -1,4 +1,4 @@
-function log(message){
+function productionLog(message){
     var currSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
     var logSheet = currSpreadsheet.getSheetByName("log");
