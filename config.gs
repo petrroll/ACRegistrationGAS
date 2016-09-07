@@ -13,6 +13,7 @@ function getTranslationConfig(formID){
         "CZ":{
             "BatchesQuestion":{
                 "Title":"Jaké turnusy chci?",
+                //Numbers in answeres corresponds to zero-based index of info in getBatchesConfig()
                 "Answers":{
                     "1. turnus": 0,
                     "2. turnus": 1,
@@ -21,6 +22,36 @@ function getTranslationConfig(formID){
                     "5. turnus": 4,
                     "6. turnus": 5,
                 },
+            },
+            "TransportQualityQuestions":{
+                "Title":"Kvalita auta:",
+                //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TransportPrice"]
+                "Answers":{
+                    "Stačí horší / je mi to jedno":0,
+                    "Chci lepší":1,
+                }
+            },
+            "TransportTypeQuestions":{
+                "Title":"Doprava?",
+                //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TransportPrice"]
+                "Answers":{
+                    "Vlastní":2,
+                    "Mám auto":2,
+                    "Společná":-1, //-1 means transport quality will determine final price
+                }
+            },
+           "TransportQuantityQuestions":{
+                "Title":"Společná cesta",
+                /*
+                1 -> Price for transport is computed normally
+                0 -> Charged only half of one transport price (no matter how many batch segments there are (e.g. when user goes to 1. and 5. batch))
+                -1 -> Not charged anything in the system, manual override required
+                */
+                "Answers":{
+                    "Všechny":1,
+                    "Jen jednu":0,
+                    "Jinak":-1
+                }
             }
         },
     }
@@ -50,6 +81,11 @@ function getPriceConfig(){
         "InsurancePerDayCZK":15,
         "InsurancePerDayEUR":0.5,
         //How many days should be added for transport
-        "InsuranceDaysForTransport":1
+        "InsuranceDaysForTransport":1,
+        "TransportPrice":[
+            {"EUR":20, "CZK":4000},
+            {"EUR":30, "CZK":5000},
+            {"EUR":0, "CZK":0},
+        ]
     }
 }

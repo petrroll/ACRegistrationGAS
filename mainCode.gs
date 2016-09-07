@@ -20,10 +20,12 @@ function workOnSendingEmail(formSubmitObj, formID) {
   var batchesInfo = getBatchesInfo(formSubmitObj, translationConfig);
   var priceAccomodInfo = getAccomodationPrice(batchesInfo, priceConfig);
   var priceInsuranceInfo = getInsurancePrice(batchesInfo, priceConfig);
+  var priceTransportInfo = getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationConfig);
 
   Logger.log(batchesInfo);
   Logger.log(priceAccomodInfo);
   Logger.log(priceInsuranceInfo);
+  Logger.log(priceTransportInfo);
 }
 
 function getBatchesInfo(formSubmitObj, translationConfig){
@@ -68,6 +70,7 @@ function getBatchesInfo(formSubmitObj, translationConfig){
     'batchSegments' : batchSegments,
     'numberOfBatches' : numberOfBatches,
     'hrString' : hrString,
+    'manualOverrideReq' : false,
   }
 
 }
@@ -81,6 +84,7 @@ function getAccomodationPrice(batchesInfo, priceConfig){
   return {
     'priceEUR' : priceEUR,
     'priceCZK' : priceCZK,
+    'manualOverrideReq' : false,
   };
 }
 
@@ -112,5 +116,44 @@ function getInsurancePrice(batchesInfo, priceConfig){
     'priceEUR' : priceEUR,
     'priceCZK' : priceCZK,
     'hrFromTo' : hrFromTo,
+    'manualOverrideReq' : false,
+  };
+}
+
+function getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationConfig){
+  var manualOverrideReq = false;
+  var numberOfTransports = batchesInfo.batchSegments.length;
+
+  var typeAnswer = formSubmitObj.namedValues[translationConfig['TransportTypeQuestions']['Title']];
+  var typeIndex = translationConfig['TransportTypeQuestions']['Answers'][typeAnswer];
+
+  var priceIndex = null;
+
+  if(typeIndex == -1){
+    var qualityAnswer = formSubmitObj.namedValues[translationConfig['TransportQualityQuestions']['Title']];
+    priceIndex = translationConfig['TransportQualityQuestions']['Answers'][qualityAnswer];
+
+    //Assume that quantity is applicable only when quality is applicable
+    var quantityAnswer = formSubmitObj.namedValues[translationConfig['TransportQuantityQuestions']['Title']];
+    var quantityCoef = translationConfig['TransportQuantityQuestions']['Answers'][quantityAnswer];
+
+    /*
+      1 -> Price for transport is computed normally
+      0 -> Charged only half of one transport price (no matter how many batch segments there are (e.g. when user goes to 1. and 5. batch))
+     -1 -> Not charged anything in the system, manual override required
+    */
+    if(quantityCoef == 0) {numberOfTransports = 0.5;}
+    else if(quantityCoef == -1) {numberOfTransports = 0; manualOverrideReq = true;}
+
+  } else {
+    priceIndex = typeIndex;
   }
+
+  var transportPrice = priceConfig['TransportPrice'][priceIndex];
+
+  return {
+    'priceEUR' : transportPrice['EUR'] * numberOfTransports,
+    'priceCZK' : transportPrice['CZK'] * numberOfTransports, 
+    'manualOverrideReq' : manualOverrideReq,
+  };
 }
