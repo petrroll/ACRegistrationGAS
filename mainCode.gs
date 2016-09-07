@@ -34,22 +34,36 @@ function workOnSendingEmail(formSubmitObj, formID) {
   Logger.log(priceTShirtInfo);
 
   var summaryVars = getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig);
+  Logger.log(summaryVars);
 
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
 }
 
+function getAnswerFromSubmitObj(formSubmitObj, questionTranslationConfig){
+  var titleTranslation = questionTranslationConfig['Title'];
+  var answerFromFormSubmit = formSubmitObj.namedValues[titleTranslation][0];
+
+  return answerFromFormSubmit;
+}
+
+function getAnswerIdFromSubmitObj(formSubmitObj, questionTranslationConfig){
+  var answerFromSubmit = getAnswerFromSubmitObj(formSubmitObj, questionTranslationConfig);
+  var answerId = questionTranslationConfig['Answers'][answerFromSubmit];
+
+  return answerId;
+}
+
 function getBatchesInfo(formSubmitObj, translationConfig){
   var batchesConfig = getBatchesConfig();
-  var batchesTranslation = translationConfig['BatchesQuestion'];
 
-  var rawResponse = formSubmitObj.namedValues[batchesTranslation['Title']];
+  var rawResponse = getAnswerFromSubmitObj(formSubmitObj, translationConfig['BatchesQuestion']);
   var hrString = rawResponse;
  
-  var responses = rawResponse[0].split(", ");
+  var responses = rawResponse.split(", ");
   var batchesInfo = [];
 
   //Translates batch answers to batch ids
-  var answersTranslation = batchesTranslation['Answers'];
+  var answersTranslation = translationConfig['BatchesQuestion']['Answers'];
   for (var i = 0; i < responses.length; ++i) {
     var batchIndex = answersTranslation[responses[i]];
     var batchInfo = batchesConfig[batchIndex];
@@ -134,18 +148,15 @@ function getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationC
   var manualOverrideReq = false;
   var numberOfTransports = batchesInfo.batchSegments.length;
 
-  var typeAnswer = formSubmitObj.namedValues[translationConfig['TransportTypeQuestions']['Title']];
-  var typeIndex = translationConfig['TransportTypeQuestions']['Answers'][typeAnswer];
+  var typeIndex = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TransportTypeQuestions']);
 
   var priceIndex = null;
 
   if(typeIndex == -1){
-    var qualityAnswer = formSubmitObj.namedValues[translationConfig['TransportQualityQuestions']['Title']];
-    priceIndex = translationConfig['TransportQualityQuestions']['Answers'][qualityAnswer];
-
+    priceIndex = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TransportQualityQuestions']);
     //Assume that quantity is applicable only when quality is applicable
-    var quantityAnswer = formSubmitObj.namedValues[translationConfig['TransportQuantityQuestions']['Title']];
-    var quantityCoef = translationConfig['TransportQuantityQuestions']['Answers'][quantityAnswer];
+    var quantityCoef = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TransportQuantityQuestions']);
+
 
     /*
       1 -> Price for transport is computed normally
@@ -169,14 +180,13 @@ function getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationC
 }
 
 function getEmailAddress(formSubmitObj, translationConfig){
-  var email = formSubmitObj.namedValues[translationConfig['Email']['Title']][0];
-
+  var email = getAnswerFromSubmitObj(formSubmitObj, translationConfig['Email']);
   return email;
 }
 
 function getTShirtPrice(formSubmitObj, priceConfig, translationConfig){
-  var tshirtAnswer = formSubmitObj.namedValues[translationConfig['TShirtQuestions']['Title']];
-  var tshirtIndex = translationConfig['TShirtQuestions']['Answers'][tshirtAnswer];
+
+  var tshirtIndex = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TShirtQuestions']);
 
   var size = null;
   var type = null;
@@ -188,8 +198,8 @@ function getTShirtPrice(formSubmitObj, priceConfig, translationConfig){
     priceCZK = priceConfig['TShirtPriceCZK'];
     priceEUR = priceConfig['TShirtPriceEUR'];
 
-    size = formSubmitObj.namedValues[translationConfig['TShirtSize']['Title']];
-    type = formSubmitObj.namedValues[translationConfig['TShirtType']['Title']];
+    size = getAnswerFromSubmitObj(formSubmitObj, translationConfig['TShirtSize']);
+    type = getAnswerFromSubmitObj(formSubmitObj, translationConfig['TShirtType']);
 
     hrString = size + " - " + type;
   }
