@@ -11,6 +11,9 @@ function getTranslationConfig(formID){
     var translateObj = 
     {
         "CZ":{
+            "Email":{
+                "Title":"Email?",
+            },
             "BatchesQuestion":{
                 "Title":"Jaké turnusy chci?",
                 //Numbers in answeres corresponds to zero-based index of info in getBatchesConfig()

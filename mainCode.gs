@@ -22,10 +22,16 @@ function workOnSendingEmail(formSubmitObj, formID) {
   var priceInsuranceInfo = getInsurancePrice(batchesInfo, priceConfig);
   var priceTransportInfo = getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationConfig);
 
+  var userEmailAddress = getEmailAddress(formSubmitObj, translationConfig);
+
+
   Logger.log(batchesInfo);
   Logger.log(priceAccomodInfo);
   Logger.log(priceInsuranceInfo);
   Logger.log(priceTransportInfo);
+  Logger.log(userEmailAddress);
+
+  sendEmailConfirmation(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, userEmailAddress, formID);
 }
 
 function getBatchesInfo(formSubmitObj, translationConfig){
@@ -156,4 +162,43 @@ function getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationC
     'priceCZK' : transportPrice['CZK'] * numberOfTransports, 
     'manualOverrideReq' : manualOverrideReq,
   };
+}
+
+function getEmailAddress(formSubmitObj, translationConfig){
+  var email = formSubmitObj.namedValues[translationConfig['Email']['Title']][0];
+
+  return email;
+}
+
+
+
+function sendEmailConfirmation(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, userEmailAddress, formID){
+  var template = getConfirmationEmailTemplate(formID);
+
+  var confirmationTemplateVars = {
+    "stringBatches" : batchesInfo.hrString,
+    "priceFinalCZK" : (priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK),
+    "priceFinalEUR" : (priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR),
+    "priceAccommodCZK" : priceAccomodInfo.priceCZK,
+    "priceAccommodEUR" : priceAccomodInfo.priceEUR,
+    "priceTransportCZK" : priceTransportInfo.priceCZK,
+    "priceTransportEUR" : priceTransportInfo.priceEUR,
+    "priceInsuranceCZK" : priceInsuranceInfo.priceCZK,
+    "priceInsuranceEUR" : priceInsuranceInfo.priceEUR,
+    "dateInsuranceHR" : priceInsuranceInfo.hrFromTo,
+    "priceTShirtCZK" : 0,
+    "priceTShirtEUR €" : 0,
+    "sizeTShirt" : '',
+    "priceDepositCZK" : 0,
+    "priceDepositEUR" : 0,
+    "priceRestCZK" : 0,
+    "priceRestEUR" : 0,
+    "varSymbol": ''
+  };
+
+  var subject = "";
+  var templatedData = fillInTemplate(template, confirmationTemplateVars);
+  sendEmail(userEmailAddress, subject, templatedData);
+
+
 }
