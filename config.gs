@@ -55,7 +55,21 @@ function getTranslationConfig(formID){
                     "Jen jednu":0,
                     "Jinak":-1
                 }
-            }
+            },
+            "TShirtQuestions":{
+                "Title":"Chci tričko?",
+                //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TShirtPrice"]
+                "Answers":{
+                    "Ano":1,
+                    "Ne":0,
+                }
+            },
+            "TShirtSize":{
+                "Title":"Velikost trička",
+            },
+            "TShirtType":{
+                "Title":"Gender trička?",
+            },
         },
     }
 
@@ -89,6 +103,10 @@ function getPriceConfig(){
             {"EUR":20, "CZK":4000},
             {"EUR":30, "CZK":5000},
             {"EUR":0, "CZK":0},
-        ]
+        ],
+        "TShirtPriceCZK":15,
+        "TShirtPriceEUR":5,
+        "DepositCZK":50,
+        "DepositEUR":1000,
     }
 }

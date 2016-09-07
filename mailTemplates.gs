@@ -12,7 +12,7 @@ Celková cena se skládá z:\n\
 Pobyt: #priceAccommodCZK Kč / #priceAccommodEUR €\n\
 Doprava: #priceTransportCZK Kč / #priceTransportEUR €\n\
 Pojištění: #priceInsuranceCZK Kč / #priceInsuranceEUR € (pojištění: #dateInsuranceHR)\n\
-Tričko: #priceTShirtCZK Kč / #priceTShirtEUR € (vybral/a sis tričko velikosti #sizeTShirt).\n\
+Tričko: #priceTShirtCZK Kč / #priceTShirtEUR € (vybral/a sis tričko #typeTShirt).\n\
 \n\
 Platbu nemusíš posílat celou najednou. Stačí poslat zálohu #priceDepositCZK Kč (#priceDepositEUR €) nejpozději do konce března, doplatek #priceRestCZK Kč (#priceRestEUR €) do konce května. Odesláním zálohy se Tvá přihláška stává závaznou a Tvé místo je rezervováno. Dokud není záloha zaplacena, může Tvé místo obsadit jiný zájemce. Platbu můžeš předat v hotovosti někomu z organizačního týmu (Honza Balák, Vojta Kaska, Erika Lorencová nebo Robin Dobra) nebo nám ji poslat na účet.\n\
 \n\

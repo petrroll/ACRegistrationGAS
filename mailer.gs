@@ -3,7 +3,7 @@ function fillInTemplate(template, data){
   var templatedString = template;
 
   for(var i = 0; i < templateVars.length; ++i){
-    var variableData = data[templateVars[i].substring(1)];
+    var variableData = data[templateVars[i].substring(1)].toString();
     templatedString = templatedString.replace(templateVars[i], variableData || "#ERROR");
   }
 

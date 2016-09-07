@@ -21,6 +21,7 @@ function workOnSendingEmail(formSubmitObj, formID) {
   var priceAccomodInfo = getAccomodationPrice(batchesInfo, priceConfig);
   var priceInsuranceInfo = getInsurancePrice(batchesInfo, priceConfig);
   var priceTransportInfo = getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationConfig);
+  var priceTShirtInfo = getTShirtPrice(formSubmitObj, priceConfig, translationConfig );
 
   var userEmailAddress = getEmailAddress(formSubmitObj, translationConfig);
 
@@ -30,8 +31,11 @@ function workOnSendingEmail(formSubmitObj, formID) {
   Logger.log(priceInsuranceInfo);
   Logger.log(priceTransportInfo);
   Logger.log(userEmailAddress);
+  Logger.log(priceTShirtInfo);
 
-  sendEmailConfirmation(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, userEmailAddress, formID);
+  var summaryVars = getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig);
+
+  sendEmailConfirmation(summaryVars, userEmailAddress, formID);
 }
 
 function getBatchesInfo(formSubmitObj, translationConfig){
@@ -170,15 +174,47 @@ function getEmailAddress(formSubmitObj, translationConfig){
   return email;
 }
 
+function getTShirtPrice(formSubmitObj, priceConfig, translationConfig){
+  var tshirtAnswer = formSubmitObj.namedValues[translationConfig['TShirtQuestions']['Title']];
+  var tshirtIndex = translationConfig['TShirtQuestions']['Answers'][tshirtAnswer];
 
+  var size = null;
+  var type = null;
+  var hrString = '-';
+  var priceCZK = 0;
+  var priceEUR = 0;
 
-function sendEmailConfirmation(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, userEmailAddress, formID){
-  var template = getConfirmationEmailTemplate(formID);
+  if(tshirtIndex == 1){
+    priceCZK = priceConfig['TShirtPriceCZK'];
+    priceEUR = priceConfig['TShirtPriceEUR'];
 
-  var confirmationTemplateVars = {
+    size = formSubmitObj.namedValues[translationConfig['TShirtSize']['Title']];
+    type = formSubmitObj.namedValues[translationConfig['TShirtType']['Title']];
+
+    hrString = size + " - " + type;
+  }
+
+  return {
+    "priceEUR" : priceEUR,
+    "priceCZK" : priceCZK,
+    "size" : size,
+    "type" : type,
+    "hrString" : hrString,
+    "manualOverrideReq":false,
+  };
+  
+}
+
+function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig){
+    var finalPriceCZK = priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK;
+    var finalPriceEUR = priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR
+
+    Logger.log(priceTShirtInfo);
+
+    var confirmationTemplateVars = {
     "stringBatches" : batchesInfo.hrString,
-    "priceFinalCZK" : (priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK),
-    "priceFinalEUR" : (priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR),
+    "priceFinalCZK" : finalPriceCZK,
+    "priceFinalEUR" : finalPriceEUR,
     "priceAccommodCZK" : priceAccomodInfo.priceCZK,
     "priceAccommodEUR" : priceAccomodInfo.priceEUR,
     "priceTransportCZK" : priceTransportInfo.priceCZK,
@@ -186,9 +222,9 @@ function sendEmailConfirmation(batchesInfo, priceAccomodInfo, priceInsuranceInfo
     "priceInsuranceCZK" : priceInsuranceInfo.priceCZK,
     "priceInsuranceEUR" : priceInsuranceInfo.priceEUR,
     "dateInsuranceHR" : priceInsuranceInfo.hrFromTo,
-    "priceTShirtCZK" : 0,
-    "priceTShirtEUR €" : 0,
-    "sizeTShirt" : '',
+    "priceTShirtCZK" : priceTShirtInfo.priceCZK,
+    "priceTShirtEUR" : priceTShirtInfo.priceEUR,
+    "typeTShirt" : priceTShirtInfo.hrString,
     "priceDepositCZK" : 0,
     "priceDepositEUR" : 0,
     "priceRestCZK" : 0,
@@ -196,9 +232,17 @@ function sendEmailConfirmation(batchesInfo, priceAccomodInfo, priceInsuranceInfo
     "varSymbol": ''
   };
 
+  return confirmationTemplateVars;
+}
+
+
+
+function sendEmailConfirmation(summaryVars, userEmailAddress, formID){
+
+  var template = getConfirmationEmailTemplate(formID);
+  var templatedData = fillInTemplate(template, summaryVars);
+  
   var subject = "";
-  var templatedData = fillInTemplate(template, confirmationTemplateVars);
+
   sendEmail(userEmailAddress, subject, templatedData);
-
-
 }
