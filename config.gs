@@ -1,8 +1,8 @@
 function getFormIdConfig(){
     return {
-        "UniqueQuestionFormIdTest":{
-            "EN":"Test",
-            "CZ":"Doprava?",
+        "uniqueQuestionFormIdTest":{
+            "en":"NotImplemented",
+            "cz":"Doprava?",
         },
     }
 }
@@ -10,14 +10,15 @@ function getFormIdConfig(){
 function getTranslationConfig(formID){
     var translateObj = 
     {
-        "CZ":{
-            "Email":{
-                "Title":"Email?",
+        "cz":{
+            "email":{
+                "title":"Email?",
             },
-            "BatchesQuestion":{
-                "Title":"Jaké turnusy chci?",
+            "batches":{
+                'multiple':true,
+                "title":"Jaké turnusy chci?",
                 //Numbers in answeres corresponds to zero-based index of info in getBatchesConfig()
-                "Answers":{
+                "answers":{
                     "1. turnus": 0,
                     "2. turnus": 1,
                     "3. turnus": 2,
@@ -26,49 +27,49 @@ function getTranslationConfig(formID){
                     "6. turnus": 5,
                 },
             },
-            "TransportQualityQuestions":{
-                "Title":"Kvalita auta:",
+            "transportQuality":{
+                "title":"Kvalita auta:",
                 //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TransportPrice"]
-                "Answers":{
+                "answers":{
                     "Stačí horší / je mi to jedno":0,
                     "Chci lepší":1,
                 }
             },
-            "TransportTypeQuestions":{
-                "Title":"Doprava?",
+            "transportType":{
+                "title":"Doprava?",
                 //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TransportPrice"]
-                "Answers":{
+                "answers":{
                     "Vlastní":2,
                     "Mám auto":2,
                     "Společná":-1, //-1 means transport quality will determine final price
                 }
             },
-           "TransportQuantityQuestions":{
-                "Title":"Společná cesta",
+           "transportQuantity":{
+                "title":"Společná cesta",
                 /*
                 1 -> Price for transport is computed normally
                 0 -> Charged only half of one transport price (no matter how many batch segments there are (e.g. when user goes to 1. and 5. batch))
                 -1 -> Not charged anything in the system, manual override required
                 */
-                "Answers":{
+                "answers":{
                     "Všechny":1,
                     "Jen jednu":0,
                     "Jinak":-1
                 }
             },
-            "TShirtQuestions":{
-                "Title":"Chci tričko?",
+            "tshirtWant":{
+                "title":"Chci tričko?",
                 //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TShirtPrice"]
-                "Answers":{
+                "answers":{
                     "Ano":1,
                     "Ne":0,
                 }
             },
-            "TShirtSize":{
-                "Title":"Velikost trička",
+            "tshirtSize":{
+                "title":"Velikost trička",
             },
-            "TShirtType":{
-                "Title":"Gender trička?",
+            "tshirtType":{
+                "title":"Gender trička?",
             },
         },
     }
@@ -79,12 +80,12 @@ function getTranslationConfig(formID){
 function getBatchesConfig(){
     return [
       //Months in dates are zero-based e.g. 0 for January, 11 for December
-      {"Id":1,"Starts":new Date(2016, 5, 26),"Ends":new Date(2016, 6, 2)},
-      {"Id":2,"Starts":new Date(2016, 6, 3),"Ends":new Date(2016, 6, 9)},
-      {"Id":3,"Starts":new Date(2016, 6, 10),"Ends":new Date(2016, 6, 16)},
-      {"Id":4,"Starts":new Date(2016, 6, 17),"Ends":new Date(2016, 6, 23)},
-      {"Id":5,"Starts":new Date(2016, 6, 24),"Ends":new Date(2016, 6, 30)},
-      {"Id":6,"Starts":new Date(2016, 6, 31),"Ends":new Date(2016, 7, 6)},
+      {"id":1,"starts":new Date(2016, 5, 26),"ends":new Date(2016, 6, 2)},
+      {"id":2,"starts":new Date(2016, 6, 3),"ends":new Date(2016, 6, 9)},
+      {"id":3,"starts":new Date(2016, 6, 10),"ends":new Date(2016, 6, 16)},
+      {"id":4,"starts":new Date(2016, 6, 17),"ends":new Date(2016, 6, 23)},
+      {"id":5,"starts":new Date(2016, 6, 24),"ends":new Date(2016, 6, 30)},
+      {"id":6,"starts":new Date(2016, 6, 31),"ends":new Date(2016, 7, 6)},
     ]    
 
 }

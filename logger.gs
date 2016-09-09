@@ -1,9 +1,9 @@
-function productionLog(message){
+function productionLog(logSheetName, message){
     var currSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
-    var logSheet = currSpreadsheet.getSheetByName("log");
+    var logSheet = currSpreadsheet.getSheetByName(logSheetName);
     if(logSheet == null) {
-        logSheet = currSpreadsheet.insertSheet("log");
+        logSheet = currSpreadsheet.insertSheet(logSheetName);
     }
 
     var timestampString = dateTimeToFullString(new Date());

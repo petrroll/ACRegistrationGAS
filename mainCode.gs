@@ -4,36 +4,53 @@ function onFormSubmit(formSubmitObj) {
   var formID = getFormID(formSubmitObj);
   Logger.log('Form id is:' + formID)
 
-  if(formID != 'ERR'){
-    //TODO: Do error handling
+  if(formID == 'err'){
+    productionLog('errorLog', ['Form id unkwnon:', formID]);
+    return;
   }
 
-  workOnSendingEmail(formSubmitObj, formID);
+  workOnSendingConfirmationEmail(formSubmitObj, formID);
   
 }
 
-function workOnSendingEmail(formSubmitObj, formID) {
+function getFormID(formSubmitObj){
+  var formIdConfig = getFormIdConfig();
+  var configUniqueQuestion = formIdConfig['uniqueQuestionFormIdTest'];
+
+  var formID = '';
+  var eventsNamedValues = formSubmitObj.namedValues;
+  
+  if(eventsNamedValues.hasOwnProperty(configUniqueQuestion['cz'])){
+    formID = 'cz';
+  }
+  else if (eventsNamedValues.hasOwnProperty(configUniqueQuestion['en'])){
+    formID = 'en';
+  }
+  else {
+    formID = 'err';
+  }
+  
+  return formID;
+}
+
+
+
+function workOnSendingConfirmationEmail(formSubmitObj, formID) {
 
   var translationConfig = getTranslationConfig(formID);
   var priceConfig = getPriceConfig();
 
-  var batchesInfo = getBatchesInfo(formSubmitObj, translationConfig);
-  var priceAccomodInfo = getAccomodationPrice(batchesInfo, priceConfig);
-  var priceInsuranceInfo = getInsurancePrice(batchesInfo, priceConfig);
-  var priceTransportInfo = getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationConfig);
-  var priceTShirtInfo = getTShirtPrice(formSubmitObj, priceConfig, translationConfig );
+  var formData = getFormData(formSubmitObj, translationConfig); Logger.log(formData);
+  var batchSegmentsInfo = getBatchSegmentsInfo(formData); Logger.log(batchSegmentsInfo);
 
-  var userEmailAddress = getEmailAddress(formSubmitObj, translationConfig);
+  var priceAccomodInfo = getAccomodationPrice(batchSegmentsInfo, priceConfig); Logger.log(priceAccomodInfo);
+  var priceInsuranceInfo = getInsurancePrice(batchSegmentsInfo, priceConfig); Logger.log(priceInsuranceInfo);
+  var priceTransportInfo = getTransportPrice(batchSegmentsInfo, formData, priceConfig); Logger.log(priceTransportInfo);
+  var priceTShirtInfo = getTShirtPrice(formData, priceConfig); Logger.log(priceTShirtInfo);
 
-
-  Logger.log(batchesInfo);
-  Logger.log(priceAccomodInfo);
-  Logger.log(priceInsuranceInfo);
-  Logger.log(priceTransportInfo);
-  Logger.log(userEmailAddress);
-  Logger.log(priceTShirtInfo);
-
-  var summaryVars = getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig);
+  var userEmailAddress = formData.email.value; Logger.log(userEmailAddress); 
+  
+  var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig);
   Logger.log(summaryVars);
 
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
@@ -53,24 +70,15 @@ function getAnswerIdFromSubmitObj(formSubmitObj, questionTranslationConfig){
   return answerId;
 }
 
-function getBatchesInfo(formSubmitObj, translationConfig){
-  var batchesConfig = getBatchesConfig();
 
-  var rawResponse = getAnswerFromSubmitObj(formSubmitObj, translationConfig['BatchesQuestion']);
-  var hrString = rawResponse;
- 
-  var responses = rawResponse.split(", ");
-  var batchesInfo = [];
+function getBatchSegmentsInfo(formData){
 
-  //Translates batch answers to batch ids
-  var answersTranslation = translationConfig['BatchesQuestion']['Answers'];
-  for (var i = 0; i < responses.length; ++i) {
-    var batchIndex = answersTranslation[responses[i]];
-    var batchInfo = batchesConfig[batchIndex];
+  var batches = formData['batches'];
+  var batchesInfo = getInfoFromIndexes(getBatchesConfig(), batches.value, 'batches');
 
-    if(batchInfo == null) {/*TODO: Do error handling*/}
-    else { batchesInfo.push(batchInfo); }   
-  }
+  Logger.log('bi');
+  Logger.log(batchesInfo);
+  Logger.log(batches.value);
 
   //Figures out individual uninterupted batch segments
   var lastBatchId = -1;
@@ -79,13 +87,13 @@ function getBatchesInfo(formSubmitObj, translationConfig){
   for(var i = 0; i < batchesInfo.length; ++i){
 
     //If there was a gap between two batches
-    if(batchesInfo[i]['Id'] - lastBatchId > 1){
+    if(batchesInfo[i]['id'] - lastBatchId > 1){
       batchSegments.push([]);
     }
 
     var lastBatchSegment = batchSegments[batchSegments.length-1];
     lastBatchSegment.push(batchesInfo[i]);
-    lastBatchId = batchesInfo[i]['Id'];
+    lastBatchId = batchesInfo[i]['id'];
 
     ++numberOfBatches;
   }
@@ -93,7 +101,7 @@ function getBatchesInfo(formSubmitObj, translationConfig){
   return {
     'batchSegments' : batchSegments,
     'numberOfBatches' : numberOfBatches,
-    'hrString' : hrString,
+    'hrString' : batches.originalValue,
     'manualOverrideReq' : false,
   }
 
@@ -122,8 +130,8 @@ function getInsurancePrice(batchesInfo, priceConfig){
     var currSegment = batchSegments[i];
     var hrCurrSegment = '';
 
-    var inAlbaniaStarts = currSegment[0]['Starts'];
-    var inAlbaniaEnds = currSegment[currSegment.length - 1]['Ends'];
+    var inAlbaniaStarts = currSegment[0]['starts'];
+    var inAlbaniaEnds = currSegment[currSegment.length - 1]['ends'];
 
     var insuranceStarts = addDays(inAlbaniaStarts, -priceConfig['InsuranceDaysForTransport']);
     var insuranceEnds = addDays(inAlbaniaEnds, priceConfig['InsuranceDaysForTransport']);
@@ -144,19 +152,16 @@ function getInsurancePrice(batchesInfo, priceConfig){
   };
 }
 
-function getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationConfig){
+function getTransportPrice(batchesInfo, formData, priceConfig){
   var manualOverrideReq = false;
   var numberOfTransports = batchesInfo.batchSegments.length;
 
-  var typeIndex = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TransportTypeQuestions']);
-
+  var typeIndex = formData['transportType'].value;
   var priceIndex = null;
 
   if(typeIndex == -1){
-    priceIndex = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TransportQualityQuestions']);
-    //Assume that quantity is applicable only when quality is applicable
-    var quantityCoef = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TransportQuantityQuestions']);
-
+    priceIndex = formData['transportQuality'].value;
+    var quantityCoef = formData['transportQuantity'].value; //Assume that quantity is applicable only when quality is applicable
 
     /*
       1 -> Price for transport is computed normally
@@ -179,14 +184,9 @@ function getTransportPrice(batchesInfo, formSubmitObj, priceConfig, translationC
   };
 }
 
-function getEmailAddress(formSubmitObj, translationConfig){
-  var email = getAnswerFromSubmitObj(formSubmitObj, translationConfig['Email']);
-  return email;
-}
+function getTShirtPrice(formData, priceConfig){
 
-function getTShirtPrice(formSubmitObj, priceConfig, translationConfig){
-
-  var tshirtIndex = getAnswerIdFromSubmitObj(formSubmitObj, translationConfig['TShirtQuestions']);
+  var tshirtIndex = formData['tshirtWant'].value;
 
   var size = null;
   var type = null;
@@ -198,8 +198,8 @@ function getTShirtPrice(formSubmitObj, priceConfig, translationConfig){
     priceCZK = priceConfig['TShirtPriceCZK'];
     priceEUR = priceConfig['TShirtPriceEUR'];
 
-    size = getAnswerFromSubmitObj(formSubmitObj, translationConfig['TShirtSize']);
-    type = getAnswerFromSubmitObj(formSubmitObj, translationConfig['TShirtType']);
+    size = formData['tshirtSize'].value;
+    type = formData['tshirtType'].value;
 
     hrString = size + " - " + type;
   }
@@ -219,7 +219,8 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
     var finalPriceCZK = priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK;
     var finalPriceEUR = priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR
 
-    Logger.log(priceTShirtInfo);
+    var depositCZK = priceConfig['DepositCZK'];
+    var depositEUR = priceConfig['DepositEUR'];
 
     var confirmationTemplateVars = {
     "stringBatches" : batchesInfo.hrString,
@@ -235,10 +236,10 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
     "priceTShirtCZK" : priceTShirtInfo.priceCZK,
     "priceTShirtEUR" : priceTShirtInfo.priceEUR,
     "typeTShirt" : priceTShirtInfo.hrString,
-    "priceDepositCZK" : 0,
-    "priceDepositEUR" : 0,
-    "priceRestCZK" : 0,
-    "priceRestEUR" : 0,
+    "priceDepositCZK" : depositCZK,
+    "priceDepositEUR" : depositEUR,
+    "priceRestCZK" : finalPriceCZK - depositCZK,
+    "priceRestEUR" : finalPriceEUR - depositEUR,
     "varSymbol": ''
   };
 

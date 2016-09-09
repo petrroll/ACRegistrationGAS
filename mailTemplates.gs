@@ -1,5 +1,5 @@
 function getConfirmationEmailTemplate(formID){
-if(formID == "CZ") {
+if(formID == "cz") {
     return "Ahoj!\n\
 \n\
 Velmi nás těší Tvůj zájem o Albánskou výzvu 2017. Počítáme s tebou na následující turnusy:\n\
