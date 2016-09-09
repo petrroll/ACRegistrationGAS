@@ -20,15 +20,9 @@ function getFormID(formSubmitObj){
   var formID = '';
   var eventsNamedValues = formSubmitObj.namedValues;
   
-  if(eventsNamedValues.hasOwnProperty(configUniqueQuestion['cz'])){
-    formID = 'cz';
-  }
-  else if (eventsNamedValues.hasOwnProperty(configUniqueQuestion['en'])){
-    formID = 'en';
-  }
-  else {
-    formID = 'err';
-  }
+  if(eventsNamedValues.hasOwnProperty(configUniqueQuestion['cz'])) { formID = 'cz'; }
+  else if (eventsNamedValues.hasOwnProperty(configUniqueQuestion['en'])) { formID = 'en'; }
+  else { formID = 'err'; }
   
   return formID;
 }
@@ -56,29 +50,10 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
 }
 
-function getAnswerFromSubmitObj(formSubmitObj, questionTranslationConfig){
-  var titleTranslation = questionTranslationConfig['Title'];
-  var answerFromFormSubmit = formSubmitObj.namedValues[titleTranslation][0];
-
-  return answerFromFormSubmit;
-}
-
-function getAnswerIdFromSubmitObj(formSubmitObj, questionTranslationConfig){
-  var answerFromSubmit = getAnswerFromSubmitObj(formSubmitObj, questionTranslationConfig);
-  var answerId = questionTranslationConfig['Answers'][answerFromSubmit];
-
-  return answerId;
-}
-
-
 function getBatchSegmentsInfo(formData){
 
   var batches = formData['batches'];
   var batchesInfo = getInfoFromIndexes(getBatchesConfig(), batches.value, 'batches');
-
-  Logger.log('bi');
-  Logger.log(batchesInfo);
-  Logger.log(batches.value);
 
   //Figures out individual uninterupted batch segments
   var lastBatchId = -1;
@@ -87,9 +62,7 @@ function getBatchSegmentsInfo(formData){
   for(var i = 0; i < batchesInfo.length; ++i){
 
     //If there was a gap between two batches
-    if(batchesInfo[i]['id'] - lastBatchId > 1){
-      batchSegments.push([]);
-    }
+    if(batchesInfo[i]['id'] - lastBatchId > 1) { batchSegments.push([]); }
 
     var lastBatchSegment = batchSegments[batchSegments.length-1];
     lastBatchSegment.push(batchesInfo[i]);

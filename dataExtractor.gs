@@ -97,3 +97,20 @@ function getFormData(formSubmitObj, translationConfig) {
 
   return formData;
 }
+
+///
+// Old functions that are not used anymore but might be usesful at some point in the future
+///
+function getAnswerFromSubmitObj(formSubmitObj, questionTranslationConfig){
+  var titleTranslation = questionTranslationConfig['Title'];
+  var answerFromFormSubmit = formSubmitObj.namedValues[titleTranslation][0];
+
+  return answerFromFormSubmit;
+}
+
+function getAnswerIdFromSubmitObj(formSubmitObj, questionTranslationConfig){
+  var answerFromSubmit = getAnswerFromSubmitObj(formSubmitObj, questionTranslationConfig);
+  var answerId = questionTranslationConfig['Answers'][answerFromSubmit];
+
+  return answerId;
+}
