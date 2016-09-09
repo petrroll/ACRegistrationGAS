@@ -43,11 +43,20 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var priceTShirtInfo = getTShirtPrice(formData, priceConfig); Logger.log(priceTShirtInfo);
 
   var userEmailAddress = formData.email.value; Logger.log(userEmailAddress); 
+  var variableSymbol = getVarriableSymbol(formData); Logger.log(variableSymbol);
   
-  var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig);
+  var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig);
   Logger.log(summaryVars);
 
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
+}
+
+function getVarriableSymbol(formData){
+  var birthDate = formData['birthDayInfo'].value;
+  var email = formData['email'].value;
+
+  var uniqueString = birthDate + email;
+  return getStringHashCode(uniqueString);
 }
 
 function getBatchSegmentsInfo(formData){
@@ -188,7 +197,7 @@ function getTShirtPrice(formData, priceConfig){
   
 }
 
-function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, priceConfig){
+function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig){
     var finalPriceCZK = priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK;
     var finalPriceEUR = priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR
 
@@ -213,7 +222,7 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
     "priceDepositEUR" : depositEUR,
     "priceRestCZK" : finalPriceCZK - depositCZK,
     "priceRestEUR" : finalPriceEUR - depositEUR,
-    "varSymbol": ''
+    "varSymbol": variableSymbol
   };
 
   return confirmationTemplateVars;

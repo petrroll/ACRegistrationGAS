@@ -8,6 +8,18 @@ function dayDiff(first, second) {
     return Math.round((second-first)/(1000*60*60*24)) + 1;
 }
 
+function getStringHashCode(stringToBeHashed) {
+	var hash = 0;
+	if (this.length == 0) return hash;
+	for (var i = 0; i < stringToBeHashed.length; i++) {
+		var char = stringToBeHashed.charCodeAt(i);
+		hash = ((hash<<5)-hash)+char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return hash;
+}
+
+
 
  function dateTimeToFullString(date) {
     var now     = date; 

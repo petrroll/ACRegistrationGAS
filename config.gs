@@ -14,6 +14,9 @@ function getTranslationConfig(formID){
             "email":{
                 "title":"Email?",
             },
+            "birthDayInfo":{
+                "title":"Rodné číslo",
+            },
             "batches":{
                 'multiple':true,
                 "title":"Jaké turnusy chci?",
