@@ -390,6 +390,10 @@ function sendEmail(recipient, subject, body, bcc) {
   var emailQuotaRemaining = MailApp.getRemainingDailyQuota();
   runtimeLog("Remaining email quota: " + emailQuotaRemaining);
 
+  if(emailQuotaRemaining < 1){
+    enqueeEmail(recipient, subject, body, bcc);
+    return false;
+  }
 
   var mailObject = {
     to: recipient,
@@ -397,10 +401,46 @@ function sendEmail(recipient, subject, body, bcc) {
     body: body
   }
 
-  if (typeof bcc !== 'undefined') { mailObject['bcc'] = bcc; }
-  //TODO: Some form of queing & resending
+  if (typeof bcc !== 'undefined' && bcc != 'undefined') { mailObject['bcc'] = bcc; }
 
   MailApp.sendEmail(mailObject);
+  return true;
+}
+
+
+function enqueeEmail(recipient, subject, body, bcc){
+  runtimeLog('enqueed email')
+
+  var emailQueeSheeName = 'emailQuee';
+  createSheetIfDoesntExist(emailQueeSheeName, undefined);
+
+  sheetLog(emailQueeSheeName, [recipient, subject, body, bcc, false]);
+}
+
+function tryToSendEnqueedEmails(){
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName('emailQuee');
+
+  if (sheet == null) { return -1; }
+  var dataRange = sheet.getDataRange();
+  var data = dataRange.getValues();
+  
+  var numberOfEmailsToBeSent = Math.min(data.length, MailApp.getRemainingDailyQuota()); runtimeLog('To be sent:' + numberOfEmailsToBeSent);
+  var i = 0;
+  for(i = 0; i < numberOfEmailsToBeSent; ++i){
+
+    var dataRow = data[i];
+    if(dataRow[5]) {continue;}
+
+    if(sendEmail(dataRow[1], dataRow[2], dataRow[3], dataRow[4])){
+      sheet.getRange(1+i, 6).setValue(true);
+    } else {break;}
+
+  }
+
+  runtimeLog('Sent: ' + i)
+  return i;
+
 }
 //
 // End Mailer;
