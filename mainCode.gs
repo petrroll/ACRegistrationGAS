@@ -46,9 +46,17 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var variableSymbol = getVarriableSymbol(formData); Logger.log(variableSymbol);
   
   var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig);
-  Logger.log(summaryVars);
+  logSummaryData(summaryVars); Logger.log(summaryVars);
 
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
+}
+
+function logSummaryData(summaryVars) {
+  var userDataHeader = objectKeysToArray(summaryVars);
+  userDataHeader.unshift('timestamp');
+  
+  createSheetIfDoesntExist('userData', userDataHeader); 
+  productionLog('userData', objectValuesToArray(summaryVars)); 
 }
 
 function getVarriableSymbol(formData){

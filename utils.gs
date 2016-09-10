@@ -9,17 +9,23 @@ function dayDiff(first, second) {
 }
 
 function getStringHashCode(stringToBeHashed) {
-	var hash = 0;
-	if (this.length == 0) return hash;
-	for (var i = 0; i < stringToBeHashed.length; i++) {
-		var char = stringToBeHashed.charCodeAt(i);
-		hash = ((hash<<5)-hash)+char;
-		hash = hash & hash; // Convert to 32bit integer
-	}
-	return hash;
+    var hash = 0;
+    if (this.length == 0) return hash;
+    for (var i = 0; i < stringToBeHashed.length; i++) {
+        var char = stringToBeHashed.charCodeAt(i);
+        hash = ((hash<<5)-hash)+char;
+        hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash);
 }
 
+function objectValuesToArray(obj) {
+   return Object.keys(obj).map(function (key) {return obj[key]});
+}
 
+function objectKeysToArray(obj) {
+   return Object.keys(obj);
+}
 
  function dateTimeToFullString(date) {
     var now     = date; 
