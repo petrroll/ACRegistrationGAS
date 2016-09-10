@@ -54,15 +54,19 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   logSummaryData(summaryVars); runtimeLog(summaryVars);
 
   addDataToAddedRow(formSubmitObj.range, 2, summaryVars.varSymbol);
+  saveBankImportantData(summaryVars, userEmailAddress);
+
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
 }
 
 function logSummaryData(summaryVars) {
+  var logSummaryDataSheetName = 'summaryLog';
+
   var userDataHeader = objectKeysToArray(summaryVars);
   userDataHeader.unshift('timestamp');
 
-  createSheetIfDoesntExist('userData', userDataHeader);
-  sheetLog('userData', objectValuesToArray(summaryVars));
+  createSheetIfDoesntExist(logSummaryDataSheetName, userDataHeader);
+  sheetLog(logSummaryDataSheetName, objectValuesToArray(summaryVars));
 }
 
 function getVarriableSymbol(formData) {
@@ -240,6 +244,29 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
   };
 
   return confirmationTemplateVars;
+}
+
+function saveBankImportantData(summaryVars, email) {
+  var moneyInfoSheetName = 'money info';
+
+  var userDataHeader = ['timestamp', 'id', 'manual override', 'email', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR'];
+  createSheetIfDoesntExist(moneyInfoSheetName, userDataHeader);
+
+  var moneyInfo = {
+    'id' : summaryVars.varSymbol,
+    'manualOverrideReq' : false,
+    'email' : email,
+    'finalPriceCZK' : summaryVars.priceFinalCZK,
+    'finalPriceEUR' : summaryVars.priceFinalEUR,
+    'paidCZK' : 0,
+    'paidEUR' : 0,
+    'paidDeposit' : false,
+    'paidEverything' : false,
+    'depositCZK' : summaryVars.priceDepositCZK,
+    'depositEUR' : summaryVars.priceDepositEUR,
+
+  }
+  sheetLog(moneyInfoSheetName, objectValuesToArray(moneyInfo));
 }
 
 
