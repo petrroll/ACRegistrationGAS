@@ -9,6 +9,7 @@ function onFormSubmit(formSubmitObj) {
     return;
   }
 
+  prepareHeaderForId(formSubmitObj);
   workOnSendingConfirmationEmail(formSubmitObj, formID);
   
 }
@@ -27,7 +28,31 @@ function getFormID(formSubmitObj){
   return formID;
 }
 
+function insertComumnIfDoesNotExist(columnHeader, sheet, indexBefore){
 
+  var headerCellValue = sheet.getRange(1,indexBefore).getValue();
+  if(headerCellValue != 'formSubmitRange') {
+    sheet.insertColumnBefore(indexBefore);
+  }
+
+  sheet.getRange(1,indexBefore).setValue(columnHeader);
+}
+
+function prepareHeaderForId(formSubmitObj){
+  var sheet = formSubmitObj.range.getSheet();
+  insertComumnIfDoesNotExist('id/var. symbol', sheet, 2);
+}
+
+function addDataToAddedRow(range, columnIndex, data){
+  var sheet = range.getSheet();
+  var rowNumber = range.getRow();
+
+  var cellObject = sheet.getRange(rowNumber, columnIndex);
+  var originalValue = cellObject.getValue();
+  if (originalValue !== '') { productionLog('errorLog', ['Cell for id was not empty:', originalValue]); Logger.log(originalValue); }
+
+  cellObject.setValue(data);
+}
 
 function workOnSendingConfirmationEmail(formSubmitObj, formID) {
 
@@ -48,6 +73,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig);
   logSummaryData(summaryVars); Logger.log(summaryVars);
 
+  addDataToAddedRow(formSubmitObj.range, 2, summaryVars.varSymbol);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
 }
 
