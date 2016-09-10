@@ -386,6 +386,7 @@ function fillInTemplate(template, data) {
 }
 
 function sendEmail(recipient, subject, body, bcc) {
+  tryToSendEnqueedEmails();
 
   var emailQuotaRemaining = MailApp.getRemainingDailyQuota();
   runtimeLog("Remaining email quota: " + emailQuotaRemaining);
@@ -393,7 +394,7 @@ function sendEmail(recipient, subject, body, bcc) {
   if(emailQuotaRemaining < 1){
     enqueeEmail(recipient, subject, body, bcc);
     return false;
-  }
+  } 
 
   var mailObject = {
     to: recipient,
@@ -418,6 +419,9 @@ function enqueeEmail(recipient, subject, body, bcc){
 }
 
 function tryToSendEnqueedEmails(){
+  var todaysQuota = MailApp.getRemainingDailyQuota();
+  if (todaysQuota < 1) {return -1;}
+
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheetByName('emailQuee');
 
@@ -425,7 +429,7 @@ function tryToSendEnqueedEmails(){
   var dataRange = sheet.getDataRange();
   var data = dataRange.getValues();
   
-  var numberOfEmailsToBeSent = Math.min(data.length, MailApp.getRemainingDailyQuota()); runtimeLog('To be sent:' + numberOfEmailsToBeSent);
+  var numberOfEmailsToBeSent = Math.min(data.length, todaysQuota); runtimeLog('To be sent:' + numberOfEmailsToBeSent);
   var i = 0;
   for(i = 0; i < numberOfEmailsToBeSent; ++i){
 
