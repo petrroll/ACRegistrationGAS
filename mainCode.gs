@@ -56,6 +56,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   addDataToAddedRow(formSubmitObj.range, 2, summaryVars.varSymbol);
   saveBankImportantData(summaryVars, userEmailAddress);
 
+  handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
 }
 
@@ -246,6 +247,13 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
   return confirmationTemplateVars;
 }
 
+function handleManualOverride(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, email) {
+
+  if(priceTransportInfo.manualOverrideReq){
+    logNeedsAttention(['Non-traditional transport (price not computed automatically), please email user.'], email, variableSymbol);
+  }
+}
+
 function saveBankImportantData(summaryVars, email) {
   var moneyInfoSheetName = 'money info';
 
@@ -286,6 +294,17 @@ function sendEmailConfirmation(summaryVars, userEmailAddress, formID) {
 //
 function logError(message){
   sheetLog('errorLog', message);
+}
+
+function logNeedsAttention(message, email, id) {
+
+  var needsAttentionSheetName = 'needs attention';
+
+  var userDataHeader = ['timestamp', 'id', 'email', 'already looked at (enter your name after you fix it)', 'other data'];
+  createSheetIfDoesntExist(needsAttentionSheetName, userDataHeader);
+
+  var data = [id, email, false].concat(message)
+  sheetLog(needsAttentionSheetName, data);
 }
 
 function runtimeLog(obj) {
