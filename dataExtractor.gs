@@ -9,7 +9,7 @@ function translateAnswerElseLog(answersConfig, answerValue, propertyName){
   
   if(typeof answerId === "undefined"){ 
     if (answerValue == '') { return null; }
-    else { productionLog('errorLog', ['Answer can not be translated:', propertyName, answerValue]); return undefined; }
+    else { sheetLog('errorLog', ['Answer can not be translated:', propertyName, answerValue]); return undefined; }
   }
   else { return answerId; }
 }
@@ -38,9 +38,9 @@ function getFormData(formSubmitObj, translationConfig) {
   var formData = {};
   var formAnswers = formSubmitObj.namedValues;
 
-  Logger.log(translationConfig);
+  runtimeLog(translationConfig);
   for (var propertyName in translationConfig) {
-    Logger.log(propertyName);
+    runtimeLog(propertyName);
 
     formData[propertyName] = {};
     var propertyData = formData[propertyName];
