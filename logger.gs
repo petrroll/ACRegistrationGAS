@@ -9,9 +9,11 @@ function productionLog(logSheetName, message){
     var timestampString = dateTimeToFullString(new Date());
 
     if(Array.isArray(message)){
-        message.unshift(timestampString);
+      message = message.map(function(obj) { if(typeof obj !== 'string') {return JSON.stringify(obj);} else { return obj; }});
+      message.unshift(timestampString);
     } else {
-        message = [timestampString, message];
+      if(typeof message !== 'string') { message = JSON.stringify(message);}
+      message = [timestampString, message];
     }
 
     logSheet.appendRow(message);
