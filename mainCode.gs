@@ -386,13 +386,13 @@ function fillInTemplate(template, data) {
 }
 
 function sendEmail(recipient, subject, body, bcc) {
-  tryToSendEnqueedEmails();
+  tryToSendEnqueuedEmails();
 
   var emailQuotaRemaining = MailApp.getRemainingDailyQuota();
   runtimeLog("Remaining email quota: " + emailQuotaRemaining);
 
   if(emailQuotaRemaining < 1){
-    enqueeEmail(recipient, subject, body, bcc);
+    enqueueEmail(recipient, subject, body, bcc);
     return false;
   } 
 
@@ -409,21 +409,21 @@ function sendEmail(recipient, subject, body, bcc) {
 }
 
 
-function enqueeEmail(recipient, subject, body, bcc){
-  runtimeLog('enqueed email')
+function enqueueEmail(recipient, subject, body, bcc){
+  runtimeLog('enqueued email')
 
-  var emailQueeSheeName = 'emailQuee';
-  createSheetIfDoesntExist(emailQueeSheeName, undefined);
+  var emailQueueSheetName = 'emailQueue';
+  createSheetIfDoesntExist(emailQueueSheetName, undefined);
 
-  sheetLog(emailQueeSheeName, [recipient, subject, body, bcc, false]);
+  sheetLog(emailQueueSheetName, [recipient, subject, body, bcc, false]);
 }
 
-function tryToSendEnqueedEmails(){
+function tryToSendEnqueuedEmails(){
   var todaysQuota = MailApp.getRemainingDailyQuota();
   if (todaysQuota < 1) {return -1;}
 
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = spreadsheet.getSheetByName('emailQuee');
+  var sheet = spreadsheet.getSheetByName('emailQueue');
 
   if (sheet == null) { return -1; }
   var dataRange = sheet.getDataRange();
