@@ -9,7 +9,7 @@ function translateAnswerElseLog(answersConfig, answerValue, propertyName){
   
   if(typeof answerId === "undefined"){ 
     if (answerValue == '') { return null; }
-    else { sheetLog('errorLog', ['Answer can not be translated:', propertyName, answerValue]); return undefined; }
+    else { logError(['Answer can not be translated:', propertyName, answerValue]); return undefined; }
   }
   else { return answerId; }
 }

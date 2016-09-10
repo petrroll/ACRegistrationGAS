@@ -5,7 +5,7 @@ function onFormSubmit(formSubmitObj) {
   runtimeLog('Form id is:' + formID)
 
   if (formID == 'err') {
-    sheetLog('errorLog', ['Form id unkwnon:', formID]);
+    logError(['Form id unkwnon:', formID]);
     return;
   }
 
@@ -284,6 +284,10 @@ function sendEmailConfirmation(summaryVars, userEmailAddress, formID) {
 ////
 // Logger
 //
+function logError(message){
+  sheetLog('errorLog', message);
+}
+
 function runtimeLog(obj) {
   Logger.log(obj);
 }
@@ -339,7 +343,7 @@ function addDataToAddedRow(range, columnIndex, data) {
 
   var cellObject = sheet.getRange(rowNumber, columnIndex);
   var originalValue = cellObject.getValue();
-  if (originalValue !== '') { sheetLog('errorLog', ['Cell for id was not empty:', originalValue]); runtimeLog(originalValue); }
+  if (originalValue !== '') { logError(['Cell for id was not empty:', originalValue]); runtimeLog(originalValue); }
 
   cellObject.setValue(data);
 }
