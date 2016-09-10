@@ -274,9 +274,9 @@ function saveBankImportantData(summaryVars, email) {
 function sendEmailConfirmation(summaryVars, userEmailAddress, formID) {
 
   var template = getConfirmationEmailTemplate(formID);
-  var templatedData = fillInTemplate(template, summaryVars);
+  var templatedData = fillInTemplate(template.text, summaryVars);
 
-  var subject = "";
+  var subject = template.subject;
 
   sendEmail(userEmailAddress, subject, templatedData, undefined);
 }

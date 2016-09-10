@@ -1,6 +1,8 @@
-function getConfirmationEmailTemplate(formID){
-if(formID == "cz") {
-    return "Ahoj!\n\
+function getConfirmationEmailTemplate(formID) {
+  if (formID == "cz") {
+    return {
+      'subject': ":Potvrzení registrace Albánské výzvy 2017!",
+      'text': "Ahoj!\n\
 \n\
 Velmi nás těší Tvůj zájem o Albánskou výzvu 2017. Počítáme s tebou na následující turnusy:\n\
 #stringBatches \n\
@@ -24,5 +26,6 @@ Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stáv
 Hezký den, těším se na viděnou v Curraji\n\
 organizační tým Albánské výzvy\n\
 "
-    };
+    }
+  };
 }
