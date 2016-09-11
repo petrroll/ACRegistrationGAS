@@ -54,7 +54,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   logSummaryData(summaryVars); runtimeLog(summaryVars);
 
   storeNewRelevantDataToOriginalSheet(formSubmitObj.range, summaryVars);
-  saveBankImportantData(summaryVars, userEmailAddress);
+  saveBankImportantData(summaryVars, userEmailAddress, formID);
 
   handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
@@ -270,16 +270,17 @@ function handleManualOverride(batchesInfo, priceAccomodInfo, priceInsuranceInfo,
   }
 }
 
-function saveBankImportantData(summaryVars, email) {
+function saveBankImportantData(summaryVars, email, formId) {
   var moneyInfoSheetName = 'money info';
 
-  var userDataHeader = ['timestamp', 'id', 'manual override', 'email', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR'];
+  var userDataHeader = ['timestamp', 'id', 'manual override', 'email', 'language', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR'];
   createSheetIfDoesntExist(moneyInfoSheetName, userDataHeader);
 
   var moneyInfo = {
     'id' : summaryVars.varSymbol,
     'manualOverrideReq' : false,
     'email' : email,
+    'language' : formId,
     'finalPriceCZK' : summaryVars.priceFinalCZK,
     'finalPriceEUR' : summaryVars.priceFinalEUR,
     'paidCZK' : 0,
