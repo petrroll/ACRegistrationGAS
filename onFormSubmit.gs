@@ -487,7 +487,9 @@ function getStringHashCode(stringToBeHashed) {
     hash = ((hash << 5) - hash) + char;
     hash = hash & hash; // Convert to 32bit integer
   }
-  return Math.abs(hash);
+  hash = Math.abs(hash);
+  hash = (hash > 1000000000) ? hash : hash + 1000000000;
+  return ;
 }
 
 function objectValuesToArray(obj) {
