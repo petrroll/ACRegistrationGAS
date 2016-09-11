@@ -43,7 +43,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var batchSegmentsInfo = getBatchSegmentsInfo(formData); runtimeLog(batchSegmentsInfo);
 
   var priceAccomodInfo = getAccomodationPrice(batchSegmentsInfo, priceConfig); runtimeLog(priceAccomodInfo);
-  var priceInsuranceInfo = getInsurancePrice(batchSegmentsInfo, priceConfig); runtimeLog(priceInsuranceInfo);
+  var priceInsuranceInfo = getInsurancePrice(batchSegmentsInfo, priceConfig, formData); runtimeLog(priceInsuranceInfo);
   var priceTransportInfo = getTransportPrice(batchSegmentsInfo, formData, priceConfig); runtimeLog(priceTransportInfo);
   var priceTShirtInfo = getTShirtPrice(formData, priceConfig); runtimeLog(priceTShirtInfo);
 
@@ -121,7 +121,18 @@ function getAccomodationPrice(batchesInfo, priceConfig) {
   };
 }
 
-function getInsurancePrice(batchesInfo, priceConfig) {
+function getInsurancePrice(batchesInfo, priceConfig, formData) {
+  
+  if(!formData.insurance.value){
+    return {
+      'priceEUR': 0,
+      'priceCZK': 0,
+      'hrFromTo': '-',
+      'manualOverrideReq': false,
+    };
+  }
+
+
   var batchSegments = batchesInfo.batchSegments;
   var daysUnderInsurance = 0;
 
