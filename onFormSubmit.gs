@@ -53,11 +53,16 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig);
   logSummaryData(summaryVars); runtimeLog(summaryVars);
 
-  addDataToAddedRow(formSubmitObj.range, 2, summaryVars.varSymbol);
+  storeNewRelevantDataToOriginalSheet(formSubmitObj.range, summaryVars);
   saveBankImportantData(summaryVars, userEmailAddress);
 
   handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID);
+}
+
+function storeNewRelevantDataToOriginalSheet(currRange, summaryVars){
+  //saves id or variable symbol
+  addDataToCurrentRow(currRange, 2, summaryVars.varSymbol);
 }
 
 function logSummaryData(summaryVars) {
@@ -122,7 +127,7 @@ function getAccomodationPrice(batchesInfo, priceConfig) {
 }
 
 function getInsurancePrice(batchesInfo, priceConfig, formData) {
-  
+
   if(!formData.insurance.value){
     return {
       'priceEUR': 0,
@@ -367,7 +372,7 @@ function insertComumnIfDoesNotExist(columnHeader, sheet, indexBefore) {
   sheet.getRange(1, indexBefore).setValue(columnHeader);
 }
 
-function addDataToAddedRow(range, columnIndex, data) {
+function addDataToCurrentRow(range, columnIndex, data) {
   var sheet = range.getSheet();
   var rowNumber = range.getRow();
 
