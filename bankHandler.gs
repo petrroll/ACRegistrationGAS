@@ -38,33 +38,32 @@ function processDataFromBank(data){
   return responseObject;
 }
 
-function processTransactions(transactions){
+function extactTransactions(transactionsRaw){
 
-  var transactionObjects = [];
-  Logger.log('transactions' + transactions.length);
-  for(var i = 0; i < transactions.length; ++i){
+  var transactionDictionary = {};
+  Logger.log('transactions' + transactionsRaw.length);
+  for(var i = 0; i < transactionsRaw.length; ++i){
 
-    var currTransaction = transactions[i];
-    var processedTransaction = processTransaction(currTransaction);
-    if(processedTransaction != null) {transactionObjects.push(processedTransaction);}
+    var currTransaction = transactionsRaw[i];
+    var processedTransaction = extractTransaction(currTransaction);
+    if (processedTransaction == null) { continue; }
 
+    //filter the ones that we don't wont (don't have variable symbol, transfer id, or date')
+    if (!(processedTransaction.hasOwnProperty('accountNumber') && processedTransaction.hasOwnProperty('variableSymbol'))){ continue; }
+        
+    var variableSymbol = processedTransaction.variableSymbol;
+    if(!transactionDictionary.hasOwnProperty(variableSymbol)){
+      transactionDictionary[variableSymbol] = [];
+    }
+
+    transactionDictionary[variableSymbol].push(processedTransaction);
+    
   }
 
-  var fullTransactions = transactionObjects.filter(
-    function(trans) {
-      return (
-        trans.hasOwnProperty('currency') &&
-        trans.hasOwnProperty('accountNumber') &&
-        trans.hasOwnProperty('date') &&
-        trans.hasOwnProperty('variableSymbol') &&
-        trans.hasOwnProperty('transferId') &&
-        trans.hasOwnProperty('amount'))
-    });
-
-  return fullTransactions;
+  return transactionDictionary;
 }
 
-function processTransaction(transaction){
+function extractTransaction(transaction){
 
   var bankConfig = getBankConfig();
 
@@ -89,9 +88,13 @@ function processTransaction(transaction){
   return transactionObject;
 }
 
+function writeDownTransactionsToBankInfo(transactionDictionary){
+
+}
+
 function testBankAccess(){
   var data = getTestingDataFromBank();
-  var transactionData = data.accountStatement.transactionList.transaction;
-  var processedTransactions = processTransactions(transactionData);
+  var transactionsRaw = data.accountStatement.transactionList.transaction;
+  var processedTransactions = extactTransactions(transactionsRaw);
   bankLog(processedTransactions);
 }

@@ -4,7 +4,7 @@ function getBankConfig(){
     'Protiúčet':'accountNumber',
     'Datum' : 'date',
     'VS' : 'variableSymbol',
-    'ID pokynu' : 'transferId',
+    'ID pohybu' : 'transferId',
     'Objem': 'amount'
   }
 }
