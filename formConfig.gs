@@ -17,6 +17,9 @@ function getTranslationConfig(formID){
             "birthDayInfo":{
                 "title":"Rodné číslo",
             },
+            'insurance':{
+                'staticValue':true,
+            },
             "batches":{
                 'multiple':true,
                 "title":"Jaké turnusy chci?",

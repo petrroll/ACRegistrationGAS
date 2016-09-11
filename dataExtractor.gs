@@ -49,6 +49,14 @@ function getFormData(formSubmitObj, translationConfig) {
 
     var translationInfo = translationConfig[propertyName];
 
+    if(translationInfo.hasOwnProperty('staticValue')){
+      var staticValue = translationInfo['staticValue'];
+
+      propertyData.value = staticValue;  
+      propertyData.originalValue = staticValue; 
+      continue;
+    }
+
     var titleInForm = translationInfo.title;
     if(!testIfExistsElseLog(titleInForm, ['Missing title in translation config:', propertyName])){continue;}
 
