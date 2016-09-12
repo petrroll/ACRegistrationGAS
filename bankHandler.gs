@@ -201,8 +201,8 @@ function writeDownTransactionToBankInfo(transactionObj, bankSheetRange, rowIndex
   sendEmail(userEmail, subject, templatedData, undefined);
 }
 
-function getNewDataFromBank(){
-  var data = getTestingDataFromBank();
+function onGetDataTick(){
+  var data = getNewDataFromBank();
   var transactionsRaw = data.accountStatement.transactionList.transaction;
   var transactionsDictionary = extactTransactions(transactionsRaw);
   
