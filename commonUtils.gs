@@ -70,7 +70,7 @@ function createSheetIfDoesntExist(sheetName, header) {
 function insertComumnIfDoesNotExist(columnHeader, sheet, indexBefore) {
 
   var headerCellValue = sheet.getRange(1, indexBefore).getValue();
-  if (headerCellValue != 'formSubmitRange') {
+  if (headerCellValue != columnHeader) {
     sheet.insertColumnBefore(indexBefore);
   }
 
@@ -193,7 +193,7 @@ function getStringHashCode(stringToBeHashed) {
   }
   hash = Math.abs(hash);
   hash = (hash > 1000000000) ? hash : hash + 1000000000;
-  return ;
+  return hash;
 }
 
 function objectValuesToArray(obj) {
