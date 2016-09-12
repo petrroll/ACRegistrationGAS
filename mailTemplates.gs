@@ -29,3 +29,81 @@ organizační tým Albánské výzvy\n\
     }
   };
 }
+
+function getPaidDepositEmail(formID) {
+  if (formID == "cz") {
+    return {
+      'subject': ":Potvrzení zaplacení zálohy za Albánskou výzvu 2017!",
+      'text': "Ahoj!\n\
+\n\
+Potvrzujeme, že jsi zaplatil zálohu za Albánskou výzvu 2017 ve výši #deposit #currency.\n\
+Konkrétně nám od tebe již přišlo #alreadyPaidNew #currency. To znamená, že do zaplacení celé částky (#finalPrice #currency) ti zbývá ještě #leftToBePaid #currency.\n\
+\n\
+Platební údaje:\n\
+Číslo účtu: 2200918851 / 2010 (pro platby ze Slovenska 2200918851 / 8330 – jedná se o slovenský účet v eurech)\n\
+Variabilní symbol: #varSymbol \n\
+\n\
+Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stává se, že méně důležité informace sdílíme pouze přes ni: https://www.facebook.com/groups/334454786737221/.\n\
+Hezký den, těším se na viděnou v Curraji\n\
+organizační tým Albánské výzvy\n\
+"
+    }
+  };
+}
+
+function getPaidEverythingtEmail(formID) {
+  if (formID == "cz") {
+    return {
+      'subject': ":Potvrzení zaplacení Albánské výzvy 2017!",
+      'text': "Ahoj!\n\
+\n\
+Potvrzujeme, že jsi zaplatil celou Albánskou výzvu 2017.\
+Konkrétně nám od tebe již přišlo #alreadyPaidNew #currency. To znamená, že od tebe již máme vše co potřebujeme (měl jsi zaplatit #finalPrice #currency) a těšíme se na tebe v létě!.\n\
+\n\
+Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stává se, že méně důležité informace sdílíme pouze přes ni: https://www.facebook.com/groups/334454786737221/.\n\
+Hezký den, těším se na viděnou v Curraji\n\
+organizační tým Albánské výzvy\n\
+"
+    }
+  };
+}
+
+function getNotYetDepositEmail(formID) {
+  if (formID == "cz") {
+    return {
+      'subject': ":Potvrzení přijatých peněz za Albánskou výzvu 2017!",
+      'text': "Ahoj!\n\
+\n\
+Potvrzujeme, že jsi zaplatil část zálohy za Albánskou výzvu 2017. Přišlo nám od tebe již #alreadyPaidNew #currency. Záloha je ovšem #deposit #currency a do umoření celé částky ti zbývá (#finalPrice #currency) ještě #leftToBePaid #currency.\n\
+\n\
+Platební údaje:\n\
+Číslo účtu: 2200918851 / 2010 (pro platby ze Slovenska 2200918851 / 8330 – jedná se o slovenský účet v eurech)\n\
+Variabilní symbol: #varSymbol \n\
+\n\
+Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stává se, že méně důležité informace sdílíme pouze přes ni: https://www.facebook.com/groups/334454786737221/.\n\
+Hezký den, těším se na viděnou v Curraji\n\
+organizační tým Albánské výzvy\n\
+"
+    }
+  };
+}
+
+function getNotYetEverythingEmail(formID) {
+  if (formID == "cz") {
+    return {
+      'subject': ":Potvrzení přijatých peněz za Albánskou výzvu 2017!",
+      'text': "Ahoj!\n\
+\n\
+Potvrzujeme, že jsme od tebe dostali nějaké peníze za Albánskou výzvu 2017. Přišlo nám od tebe již #alreadyPaidNew #currency. Do umoření celé částky ti zbývá (#finalPrice #currency) ještě #leftToBePaid #currency.\n\
+\n\
+Platební údaje:\n\
+Číslo účtu: 2200918851 / 2010 (pro platby ze Slovenska 2200918851 / 8330 – jedná se o slovenský účet v eurech)\n\
+Variabilní symbol: #varSymbol \n\
+\n\
+Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stává se, že méně důležité informace sdílíme pouze přes ni: https://www.facebook.com/groups/334454786737221/.\n\
+Hezký den, těším se na viděnou v Curraji\n\
+organizační tým Albánské výzvy\n\
+"
+    }
+  };
+}
