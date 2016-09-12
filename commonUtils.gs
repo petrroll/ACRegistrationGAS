@@ -248,6 +248,20 @@ function dateTimeToLimitedString(date) {
   var dateTime = day + '/' + month;
   return dateTime;
 }
+
+function reliableToInt(obj){
+  var objType = typeof obj;
+  if(objType === "string"){
+    return parseInt(obj);
+  }
+  else if(objType === "number"){
+    return obj;
+  }
+  else if(objType == "booloean"){
+    return (obj) ? 1 : 0;
+  }
+  else {return undefined;}
+}
 //
 // End Utils;
 ////
