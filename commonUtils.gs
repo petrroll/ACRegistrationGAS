@@ -43,6 +43,18 @@ function sheetLog(logSheetName, message) {
 ////
 // Sheet manipulating functions
 //
+function getActiveRange(sheetName){
+
+  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = spreadsheet.getSheetByName(sheetName);
+
+  if (sheet == null) { return null; }
+  var dataRange = sheet.getDataRange();
+
+  return dataRange;
+
+}
+
 function createSheetIfDoesntExist(sheetName, header) {
 
   var currSpreadsheet = SpreadsheetApp.getActiveSpreadsheet();
@@ -131,11 +143,8 @@ function tryToSendEnqueuedEmails(){
   var todaysQuota = MailApp.getRemainingDailyQuota();
   if (todaysQuota < 1) {return -1;}
 
-  var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet = spreadsheet.getSheetByName('emailQueue');
-
-  if (sheet == null) { return -1; }
-  var dataRange = sheet.getDataRange();
+  var dataRange = getActiveRange('emailQueue');
+  if (dataRange == null) { return -1; }
   var data = dataRange.getValues();
   
   var numberOfEmailsToBeSent = Math.min(data.length, todaysQuota); runtimeLog('To be sent:' + numberOfEmailsToBeSent);
