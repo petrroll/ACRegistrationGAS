@@ -177,13 +177,14 @@ function writeDownTransactionToBankInfo(transactionObj, bankSheetRange, rowIndex
   }
 
   var emailTemplate = null;
-  if(paidDeposit && !paidDepositBefore){
-    sheet.getRange(rowIndexInRange + 1, paidDepositIndex + 1).setValue(true);  
-    emailTemplate = getPaidDepositEmail(userLanguage);
-  }
-  else if(paidEverything && !paidEverythingBefore){
+
+  if(paidEverything && !paidEverythingBefore){
     sheet.getRange(rowIndexInRange + 1, paidEverythingIndex + 1).setValue(true);  
     emailTemplate = getPaidEverythingtEmail(userLanguage);
+  }
+  else if(paidDeposit && !paidDepositBefore){
+    sheet.getRange(rowIndexInRange + 1, paidDepositIndex + 1).setValue(true);  
+    emailTemplate = getPaidDepositEmail(userLanguage);
   }
   else if(!paidDeposit){
     emailTemplate = getNotYetDepositEmail(userLanguage);
