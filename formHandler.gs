@@ -76,7 +76,7 @@ function logSummaryData(summaryVars) {
 }
 
 function getVarriableSymbol(formData) {
-  var birthDate = formData['birthDayInfo'].value;
+  var birthDate = formData['birthDayInfo'].value.toString();
   var email = formData['email'].value;
 
   var uniqueString = birthDate + email;
