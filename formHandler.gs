@@ -31,7 +31,7 @@ function getFormID(formSubmitObj) {
 
 function prepareHeaderForId(formSubmitObj) {
   var sheet = formSubmitObj.range.getSheet();
-  insertComumnIfDoesNotExist('id/var. symbol', sheet, 2);
+  insertComumnIfDoesNotExist('id/var. symbol', sheet, 1);
 }
 
 function workOnSendingConfirmationEmail(formSubmitObj, formID) {
@@ -62,7 +62,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
 
 function storeNewRelevantDataToOriginalSheet(currRange, summaryVars){
   //saves id or variable symbol
-  addDataToCurrentRow(currRange, 2, summaryVars.varSymbol);
+  addDataToCurrentRow(currRange, 1, summaryVars.varSymbol);
 }
 
 function logSummaryData(summaryVars) {

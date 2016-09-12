@@ -69,19 +69,21 @@ function createSheetIfDoesntExist(sheetName, header) {
 
 function insertComumnIfDoesNotExist(columnHeader, sheet, indexBefore) {
 
-  var headerCellValue = sheet.getRange(1, indexBefore).getValue();
+  //Range indexes are one-based
+  var headerCellValue = sheet.getRange(1, indexBefore + 1).getValue();
   if (headerCellValue != columnHeader) {
-    sheet.insertColumnBefore(indexBefore);
+    sheet.insertColumnBefore(indexBefore + 1);
   }
 
-  sheet.getRange(1, indexBefore).setValue(columnHeader);
+  sheet.getRange(1, indexBefore + 1).setValue(columnHeader);
 }
 
 function addDataToCurrentRow(range, columnIndex, data) {
   var sheet = range.getSheet();
   var rowNumber = range.getRow();
 
-  var cellObject = sheet.getRange(rowNumber, columnIndex);
+  //Range isn't zero based index
+  var cellObject = sheet.getRange(rowNumber, columnIndex + 1);
   var originalValue = cellObject.getValue();
   if (originalValue !== '') { logError(['Cell for id was not empty:', originalValue]); runtimeLog(originalValue); }
 
