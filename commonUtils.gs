@@ -145,6 +145,8 @@ function tryToSendEnqueuedEmails(){
 
   var dataRange = getActiveRange('emailQueue');
   if (dataRange == null) { return -1; }
+
+  var sheet = dataRange.getSheet();
   var data = dataRange.getValues();
   
   var numberOfEmailsToBeSent = Math.min(data.length, todaysQuota); runtimeLog('To be sent:' + numberOfEmailsToBeSent);
