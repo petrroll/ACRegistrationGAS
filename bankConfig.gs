@@ -5,6 +5,7 @@ function getBankConfig(){
     'Datum' : 'date',
     'VS' : 'variableSymbol',
     'ID pohybu' : 'transferId',
-    'Objem': 'amount'
+    'Objem': 'amount',
+    'Upřesnění' : 'additionalInfo'
   }
 }
