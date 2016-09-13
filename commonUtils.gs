@@ -180,23 +180,23 @@ function onTryToSendAttentionRequiredEmailsTick(){
   var sheet = dataRange.getSheet();
   var data = dataRange.getValues();
   
-  var numberOfEmailsToBeSent = Math.min(data.length, todaysQuota);
-  var i = 0;
-  for(i = 1; i < numberOfEmailsToBeSent; ++i){
+  var body = '';
+  for(var i = 1; i < data.length; ++i){
 
     var dataRow = data[i];
     if(dataRow[3]) {continue;}
-
-    var generalConfig = getGeneralConfig();
-    var attentionEmailObject = {
-      'subject' : generalConfig['attentionSubject'],
-      'recipient' : generalConfig['attentionEmail'],
-      'body' : dataRow.join(', '),
-    }
-
-    sendEmail(attentionEmailObject.recipient, attentionEmailObject.subject, attentionEmailObject.body, undefined, true)
+    body += dataRow.join(', ') + '\n';
 
   }
+
+  var generalConfig = getGeneralConfig();
+  var attentionEmailObject = {
+    'subject' : generalConfig['attentionSubject'],
+    'recipient' : generalConfig['attentionEmail'],
+    'body' : body,
+  }
+
+  sendEmail(attentionEmailObject.recipient, attentionEmailObject.subject, attentionEmailObject.body, undefined, true)
 
 }
 //
