@@ -2,8 +2,7 @@ function bankLog(message){
   sheetLog('bankLog', message);
 }
 
-function getNewDataFromBank(){
-  var token = getBankSecret();
+function getNewDataFromBank(token){
   var url = "https://www.fio.cz/ib_api/rest/last/" + token + "/transactions.json"
   var data = UrlFetchApp.fetch(url);
 
@@ -222,11 +221,16 @@ function writeDownTransactionToBankInfo(transactionObj, bankSheetRange, rowIndex
 }
 
 function onGetBankingDataTick(){
-  var data = getNewDataFromBank();
-  var transactionsRaw = data.accountStatement.transactionList.transaction;
-  var transactionsDictionary = extactTransactions(transactionsRaw);
+  var tokens = getBankSecret();
+  for(var i = 0; i < tokens.length; ++i){
+
+    var data = getNewDataFromBank(tokens[i]);
+    var transactionsRaw = data.accountStatement.transactionList.transaction;
+    var transactionsDictionary = extactTransactions(transactionsRaw);
   
-  writeDownTransactionsToBankInfo(transactionsDictionary);
+    writeDownTransactionsToBankInfo(transactionsDictionary);
+    
+  }
 }
 
 
