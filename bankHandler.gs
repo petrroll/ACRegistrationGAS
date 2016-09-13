@@ -95,7 +95,7 @@ function handleAdditionalInfoWhenSendingEurosToCZKAccount(transactionObj){
   var additionalInfo = transactionObj['additionalInfo'];
   var match =  additionalInfo.match(/^([0-9]+\.[0-9]+) EUR$/);
 
-  if(match.length < 2){ return; }
+  if(match != null && match.length < 2){ return; }
   var newAmountEUR = match[1];
 
   transactionObj['currencyOrig'] = transactionObj.currency;
@@ -229,7 +229,7 @@ function onGetBankingDataTick(){
     var transactionsDictionary = extactTransactions(transactionsRaw);
   
     writeDownTransactionsToBankInfo(transactionsDictionary);
-    
+
   }
 }
 
