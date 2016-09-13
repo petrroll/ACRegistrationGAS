@@ -108,13 +108,14 @@ function fillInTemplate(template, data) {
   return templatedString;
 }
 
-function sendEmail(recipient, subject, body, bcc) {
+function sendEmail(recipient, subject, body, bcc, enqueue) {
+  if (typeof enqueue === 'undefined' || enqueue === 'undefined') { enqueue = true; }
   onTryToSendEnqueuedEmailsTick();
 
   var emailQuotaRemaining = MailApp.getRemainingDailyQuota();
   runtimeLog("Remaining email quota: " + emailQuotaRemaining);
 
-  if(emailQuotaRemaining < 1){
+  if(emailQuotaRemaining < 5 && enqueue){
     enqueueEmail(recipient, subject, body, bcc);
     return false;
   } 
@@ -158,7 +159,7 @@ function onTryToSendEnqueuedEmailsTick(){
     var dataRow = data[i];
     if(dataRow[5]) {continue;}
 
-    if(sendEmail(dataRow[1], dataRow[2], dataRow[3], dataRow[4])){
+    if(sendEmail(dataRow[1], dataRow[2], dataRow[3], dataRow[4], false)){
       sheet.getRange(1+i, 6).setValue(true);
     } else {break;}
 
@@ -166,6 +167,36 @@ function onTryToSendEnqueuedEmailsTick(){
 
   runtimeLog('Sent: ' + i)
   return i;
+
+}
+
+function onTryToSendAttentionRequiredEmailsTick(){
+  var todaysQuota = MailApp.getRemainingDailyQuota();
+  if (todaysQuota < 1) {return;}
+
+  var dataRange = getActiveRange('needs attention');
+  if (dataRange == null) { return; }
+
+  var sheet = dataRange.getSheet();
+  var data = dataRange.getValues();
+  
+  var numberOfEmailsToBeSent = Math.min(data.length, todaysQuota);
+  var i = 0;
+  for(i = 1; i < numberOfEmailsToBeSent; ++i){
+
+    var dataRow = data[i];
+    if(dataRow[3]) {continue;}
+
+    var generalConfig = getGeneralConfig();
+    var attentionEmailObject = {
+      'subject' : generalConfig['attentionSubject'],
+      'recipient' : generalConfig['attentionEmail'],
+      'body' : dataRow.join(', '),
+    }
+
+    sendEmail(attentionEmailObject.recipient, attentionEmailObject.subject, attentionEmailObject.body, undefined, true)
+
+  }
 
 }
 //

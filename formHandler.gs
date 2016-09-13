@@ -303,5 +303,5 @@ function sendEmailConfirmation(summaryVars, userEmailAddress, formID) {
 
   var subject = template.subject;
 
-  sendEmail(userEmailAddress, subject, templatedData, undefined);
+  sendEmail(userEmailAddress, subject, templatedData, undefined, true);
 }
