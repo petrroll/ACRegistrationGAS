@@ -109,7 +109,7 @@ function fillInTemplate(template, data) {
 }
 
 function sendEmail(recipient, subject, body, bcc) {
-  tryToSendEnqueuedEmails();
+  onTryToSendEnqueuedEmailsTick();
 
   var emailQuotaRemaining = MailApp.getRemainingDailyQuota();
   runtimeLog("Remaining email quota: " + emailQuotaRemaining);
@@ -141,7 +141,7 @@ function enqueueEmail(recipient, subject, body, bcc){
   sheetLog(emailQueueSheetName, [recipient, subject, body, bcc, false]);
 }
 
-function tryToSendEnqueuedEmails(){
+function onTryToSendEnqueuedEmailsTick(){
   var todaysQuota = MailApp.getRemainingDailyQuota();
   if (todaysQuota < 1) {return -1;}
 
