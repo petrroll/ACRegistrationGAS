@@ -108,7 +108,7 @@ function fillInTemplate(template, data) {
   return templatedString;
 }
 
-function sendEmail(recipient, subject, body, bcc, enqueue) {
+Mailfunction sendEmail(recipient, subject, body, bcc, enqueue) {
   if (typeof enqueue === 'undefined' || enqueue === 'undefined') { enqueue = true; }
   onTryToSendEnqueuedEmailsTick();
 
@@ -123,7 +123,8 @@ function sendEmail(recipient, subject, body, bcc, enqueue) {
   var mailObject = {
     to: recipient,
     subject: subject,
-    body: body
+    body: body,
+    replyTo : getGeneralConfig()['replyToEmail']
   }
 
   if (typeof bcc !== 'undefined' && bcc != 'undefined') { mailObject['bcc'] = bcc; }
