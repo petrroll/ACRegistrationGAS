@@ -49,15 +49,16 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
 
   var userEmailAddress = formData.email.value; runtimeLog(userEmailAddress);
   var variableSymbol = getVarriableSymbol(formData); runtimeLog(variableSymbol);
+  var birthDateInfo = getBirthDateInfo(formData); runtimeLog(birthDateInfo);
 
   var summaryVars = getConfirmationSummary(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig);
   logSummaryData(summaryVars); runtimeLog(summaryVars);
 
   storeNewRelevantDataToOriginalSheet(formSubmitObj.range, summaryVars);
-  saveBankImportantData(summaryVars, userEmailAddress, formID);
+  saveBankImportantData(summaryVars, userEmailAddress, formID, birthDateInfo);
 
-  handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress);
-  sendEmailConfirmation(summaryVars, userEmailAddress, formID);
+  var emailType = handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress, birthDateInfo); runtimeLog(emailType);
+  sendEmailConfirmation(summaryVars, userEmailAddress, formID, emailType);
 }
 
 function storeNewRelevantDataToOriginalSheet(currRange, summaryVars){
@@ -169,6 +170,36 @@ function getInsurancePrice(batchesInfo, priceConfig, formData) {
   };
 }
 
+function getBirthDate(formData){
+
+  var birthDayValue = formData['birthDayInfo'].value;
+  if(Object.prototype.toString.call(birthDayValue) === "[object Date]" ){
+    return birthDayValue;
+  }
+  else if(typeof birthDayValue != "string") { return null; }
+
+  var matches = birthDayValue.match(/^([0-9]{2})([0-9]{2})([0-9]{2})\/[0-9]{4}$/);
+  if(matches.length < 4) { return null; }
+  var birtDateObj = new Date(19 + matches[1], matches[2] - 1, matches[3]); 
+
+  return birtDateObj;
+
+}
+
+function getBirthDateInfo(formData){
+
+  var birthDate = getBirthDate(formData);
+  var lastAlowedBirthDate = getOtherConfig()['lastAlowedBirthdate'];
+
+  var isBirthDateOk = (birthDate - lastAlowedBirthDate > 0);
+  
+  return {
+    'birthDateOk' : isBirthDateOk,
+    'birthDate' : birthDate,
+  }
+
+}
+
 function getTransportPrice(batchesInfo, formData, priceConfig) {
   var manualOverrideReq = false;
   var numberOfTransports = batchesInfo.batchSegments.length;
@@ -263,17 +294,25 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
   return confirmationTemplateVars;
 }
 
-function handleManualOverride(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, email) {
+function handleManualOverride(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, email, birthDateInfo) {
 
   if(priceTransportInfo.manualOverrideReq){
     logNeedsAttention(['Non-traditional transport (price not computed automatically), please email user.'], email, variableSymbol);
   }
+
+  if(birthDateInfo.birthDateOk){
+    return 'normalEmail';
+  }
+  else{
+    logNeedsAttention(['User too old, please email user.', birthDateInfo.birthDate], email, variableSymbol);
+    return 'notOldEnough';
+  }
 }
 
-function saveBankImportantData(summaryVars, email, formId) {
+function saveBankImportantData(summaryVars, email, formId, birthDateInfo) {
   var moneyInfoSheetName = 'money info';
 
-  var userDataHeader = ['timestamp', 'id', 'manual override', 'email', 'language', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR'];
+  var userDataHeader = ['timestamp', 'id', 'manual override', 'email', 'language', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR', 'registration valid (not too old, ...)'];
   createSheetIfDoesntExist(moneyInfoSheetName, userDataHeader);
 
   var moneyInfo = {
@@ -289,6 +328,7 @@ function saveBankImportantData(summaryVars, email, formId) {
     'paidEverything' : false,
     'depositCZK' : summaryVars.priceDepositCZK,
     'depositEUR' : summaryVars.priceDepositEUR,
+    'registrationValid' : birthDateInfo.birthDateOk
 
   }
   sheetLog(moneyInfoSheetName, objectValuesToArray(moneyInfo));
@@ -296,9 +336,9 @@ function saveBankImportantData(summaryVars, email, formId) {
 
 
 
-function sendEmailConfirmation(summaryVars, userEmailAddress, formID) {
+function sendEmailConfirmation(summaryVars, userEmailAddress, formID, emailType) {
 
-  var template = getConfirmationEmailTemplate(formID);
+  var template = getConfirmationEmailTemplate(formID)[emailType];
   var templatedData = fillInTemplate(template.text, summaryVars);
 
   var subject = template.subject;

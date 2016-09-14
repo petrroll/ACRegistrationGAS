@@ -83,6 +83,13 @@ function getTranslationConfig(formID){
     return translateObj[formID];
 }
 
+function getOtherConfig(){
+    return {
+        'lastAlowedBirthdate' : new Date(1986, 8, 13)
+    }
+
+}
+
 function getBatchesConfig(){
     return [
       //Months in dates are zero-based e.g. 0 for January, 11 for December
