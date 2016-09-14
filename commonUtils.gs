@@ -108,7 +108,7 @@ function fillInTemplate(template, data) {
   return templatedString;
 }
 
-Mailfunction sendEmail(recipient, subject, body, bcc, enqueue) {
+sendEmail(recipient, subject, body, bcc, enqueue) {
   if (typeof enqueue === 'undefined' || enqueue === 'undefined') { enqueue = true; }
   onTryToSendEnqueuedEmailsTick();
 
