@@ -42,7 +42,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var formData = getFormData(formSubmitObj, translationConfig); runtimeLog(formData);
   var ticketPriceInfo = getTicketPriceInfo(formData, priceConfig);
 
-  var userEmailAddress = formData.email;
+  var userEmailAddress = formData.email.value;
   var varSymbolId = getStringHashCode(userEmailAddress + formData.numberOfTickets.toString());
 
   var summaryVars = {
@@ -62,8 +62,8 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
 function getTicketPriceInfo(formData, priceConfig){
 
   return {
-    'priceCZK' : formData.numberOfTickets * priceConfig.OneTicketCZK, 
-    'priceEUR' : formData.numberOfTickets * priceConfig.OneTicketEUR
+    'priceCZK' : formData.numberOfTickets.value * priceConfig.OneTicketCZK, 
+    'priceEUR' : formData.numberOfTickets.value * priceConfig.OneTicketEUR
   };
 
 }
