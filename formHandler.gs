@@ -179,10 +179,16 @@ function getBirthDate(formData){
   else if(typeof birthDayValue != "string") { return null; }
 
   var matches = birthDayValue.match(/^([0-9]{2})([0-9]{2})([0-9]{2})\/[0-9]{3,4}$/);
-  if(matches.length < 4) { return null; }
-  var birtDateObj = new Date(19 + matches[1], matches[2] - 1, matches[3]); 
+  if(matches != null && matches.length == 4){
+    return new Date(19 + matches[1], matches[2] - 1, matches[3]); 
+  }
 
-  return birtDateObj;
+  matches = birthDayValue.match(/^([0-9]{1,2})\.([0-9]{1,2})\.([0-9]{4})$/);
+  if(matches != null && matches.length == 4) {
+    return new Date(matches[3], matches[2] - 1, matches[1]);
+  }
+
+  return null;
 
 }
 
