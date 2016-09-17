@@ -60,11 +60,11 @@ function getFormData(formSubmitObj, translationConfig) {
     var titleInForm = translationInfo.title;
     if(!testIfExistsElseLog(titleInForm, ['Missing title in translation config:', propertyName])){continue;}
 
-    var answerArrInForm = formAnswers[titleInForm];
+    var answerArrInForm = formAnswers[titleInForm].filter(function(item) {return (item !== '');});
     if(!testIfExistsElseLog(answerArrInForm, ['Missing answer in form:', propertyName, titleInForm])){continue;}
 
     //Answers are stored in first element of an array (always)
-    var answerInForm = answerArrInForm[0];
+    var answerInForm = (answerArrInForm.length > 0) ? answerArrInForm[0] : '';
     propertyData.originalValue = answerInForm;
 
     if(translationInfo.hasOwnProperty('answers') && 
