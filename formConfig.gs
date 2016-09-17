@@ -49,7 +49,7 @@ function getTranslationConfig(formID){
                 //Numbers in answeres corresponds to zero-based index of info in getPriceConfig()["TransportPrice"]
                 "answers":{
                     "Vlastní":2,
-                    "Mám auto":2,
+                    "Mám auto a budu v něm mít volná místa.":2,
                     "Společná":-1, //-1 means transport quality will determine final price
                 }
             },
