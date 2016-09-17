@@ -100,6 +100,8 @@ function fillInTemplate(template, data) {
   var templateVars = template.match(/#[A-Za-z]+/g);
   var templatedString = template;
 
+  if(templateVars == null) {return template;}
+
   for (var i = 0; i < templateVars.length; ++i) {
     var variableData = data[templateVars[i].substring(1)].toString();
     templatedString = templatedString.replace(templateVars[i], variableData || "#ERROR");
