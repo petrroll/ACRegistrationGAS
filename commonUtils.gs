@@ -184,13 +184,17 @@ function onTryToSendAttentionRequiredEmailsTick(){
   var data = dataRange.getValues();
   
   var body = '';
+  var numberOfNeedsAttentionMessages = 0;
   for(var i = 1; i < data.length; ++i){
 
     var dataRow = data[i];
     if(dataRow[3]) {continue;}
     body += dataRow.join(', ') + '\n';
+    numberOfNeedsAttentionMessages += 1;
 
   }
+
+  if(!(numberOfNeedsAttentionMessages > 0)) { return; }
 
   var generalConfig = getGeneralConfig();
   var attentionEmailObject = {
