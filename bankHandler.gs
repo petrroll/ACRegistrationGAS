@@ -176,7 +176,9 @@ function writeDownTransactionToBankInfo(transactionObj, bankSheetRange, rowIndex
   var finalPrice = reliableToInt(values[finalPriceIndex]);
   var deposit = reliableToInt(values[depositIndex]);
 
-  var alreadyPaidNew = alreadyPaid + transactionObj.amount;
+  var justPaid = reliableToInt(transactionObj.amount);
+  
+  var alreadyPaidNew = alreadyPaid + justPaid;
   sheet.getRange(rowIndexInRange + 1, alreadyPaidIndex + 1).setValue(alreadyPaidNew);
 
   var paidDeposit = (alreadyPaidNew >= deposit);
