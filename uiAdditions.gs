@@ -17,12 +17,12 @@ function userPaidFunctionUI(){
   var button = result.getSelectedButton();
   var text = result.getResponseText();
   
-  if (button == ui.Button.CLOSE) {
+  if (button == ui.Button.CLOSE || text == null || text == '') {
     return;
   }
   
   var matches = text.match(/^([0-9]{10});((CZK)|(EUR));([0-9]+)$/);
-  if(matches.length != 6){
+  if(matches == null || matches.length != 6){
     ui.alert("Incorrect format :(.");
     return;
   }
@@ -31,6 +31,7 @@ function userPaidFunctionUI(){
   var transactionObj = {
     'currency' : matches[2],
     'amount' : matches[5],
+    'variableSymbol' : varSymbol,
   }
   
   runtimeLog(varSymbol);
