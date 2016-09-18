@@ -40,7 +40,7 @@ function processDataFromBank(data){
 function extactTransactions(transactionsRaw){
 
   var transactionDictionary = {};
-  Logger.log('transactions' + transactionsRaw.length);
+  runtimeLog('transactions' + transactionsRaw.length);
   for(var i = 0; i < transactionsRaw.length; ++i){
 
     var currTransaction = transactionsRaw[i];
@@ -103,7 +103,7 @@ function handleAdditionalInfoWhenSendingEurosToCZKAccount(transactionObj){
   transactionObj.currency = 'EUR';
   transactionObj.amount  = newAmountEUR;  
 
-  Logger.log(transactionObj);  
+  runtimeLog(transactionObj);  
   
 }
 
@@ -177,7 +177,7 @@ function writeDownTransactionToBankInfo(transactionObj, bankSheetRange, rowIndex
   var deposit = reliableToInt(values[depositIndex]);
 
   var justPaid = reliableToInt(transactionObj.amount);
-  
+
   var alreadyPaidNew = alreadyPaid + justPaid;
   sheet.getRange(rowIndexInRange + 1, alreadyPaidIndex + 1).setValue(alreadyPaidNew);
 
