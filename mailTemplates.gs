@@ -59,7 +59,7 @@ robot Curraj01\n\
 function getNotYetDepositEmail(formID) {
   if (formID == "cz") {
     return {
-      'subject': ":Potvrzení přijatých peněz za recepci Albánské výzvy",
+      'subject': "Potvrzení přijatých peněz za recepci Albánské výzvy",
       'text': "Ahoj!\n\
 \n\
 Potvrzujeme, že jsi zaplatil/a část částky za recepci Albánské výzvy. Přišlo nám od Tebe #alreadyPaidNew #currency. Měl/a jsi ale zaplatit #deposit #currency a do umoření celé částky Ti zbývá (#finalPrice #currency) ještě #leftToBePaid #currency.\n\
