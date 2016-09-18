@@ -43,6 +43,27 @@ function sheetLog(logSheetName, message) {
 ////
 // Sheet manipulating functions
 //
+function findRowIndexAndRangeInSheet(sheetName, searchValue, searchColumnIndex){
+
+  var dataRange = getActiveRange(sheetName);
+  if (dataRange == null) { logError('sheet' + sheetName + 'does not exist but should.'); return null;}
+
+  var data = dataRange.getValues();
+  
+  for(var i = 0; i < data.length; ++i){
+
+    var dataRow = data[i];
+    if(dataRow[searchColumnIndex] != searchValue) {continue; }
+      
+    return {
+      'range' : dataRange,
+      'indexInRange' : i,
+    };
+         
+  }
+  
+}
+
 function getActiveRange(sheetName){
 
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
