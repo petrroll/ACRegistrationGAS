@@ -63,6 +63,7 @@ function getVarriableSymbol(formData) {
   var otherData = formData.numberOfTickets.toString();
   var email = formData.email.value;
 
+  var varSymbolIndex = 2;
 
   var uniqueString = '';
   var hashValue = 0;
@@ -70,7 +71,7 @@ function getVarriableSymbol(formData) {
     uniqueString += otherData + email;
     hashValue = getStringHashCode(uniqueString);
 
-  }while(findRowIndexAndRangeInSheet("money info", hashValue, 2) != null)
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, varSymbolIndex) != null)
 
 
   return hashValue;
