@@ -55,7 +55,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   logSummaryData(summaryVars); runtimeLog(summaryVars);
 
   storeNewRelevantDataToOriginalSheet(formSubmitObj.range, summaryVars);
-  saveBankImportantData(summaryVars, userEmailAddress, formID, birthDateInfo.birthDateOk);
+  saveBankImportantData(summaryVars, userEmailAddress, formID, (birthDateInfo.birthDateOk && !batchSegmentsInfo.manualOverrideReq));
 
   var emailType = handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress, birthDateInfo); runtimeLog(emailType);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID, emailType);
