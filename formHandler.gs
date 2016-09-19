@@ -80,8 +80,17 @@ function getVarriableSymbol(formData) {
   var birthDate = formData['birthDayInfo'].value.toString();
   var email = formData['email'].value;
 
-  var uniqueString = birthDate + email;
-  return getStringHashCode(uniqueString);
+
+  var uniqueString = '';
+  var hashValue = 0;
+  do{
+    uniqueString += birthDate + email;
+    hashValue = getStringHashCode(uniqueString);
+
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, 1) != null)
+
+
+  return hashValue;
 }
 
 function getBatchSegmentsInfo(formData) {

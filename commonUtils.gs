@@ -61,6 +61,8 @@ function findRowIndexAndRangeInSheet(sheetName, searchValue, searchColumnIndex){
     };
          
   }
+
+  return null;
   
 }
 
