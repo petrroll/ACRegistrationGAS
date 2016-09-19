@@ -42,10 +42,11 @@ function userPaidFunctionUI(){
 
 function updateBankInfoWithTransactionObj(varSymbol, transactionObj){
   var sheetName = 'money info';
-  var searchIndex = 2;
+  
+  var varSymbolIndex = 2;
   var searchValue = varSymbol;
   
-  var rowInfo = findRowIndexAndRangeInSheet(sheetName, searchValue, searchIndex); runtimeLog(rowInfo);
+  var rowInfo = findRowIndexAndRangeInSheet(sheetName, searchValue, varSymbolIndex); runtimeLog(rowInfo);
   if(rowInfo == null) {return;}
   
   writeDownTransactionToBankInfo(transactionObj, rowInfo.range, rowInfo.indexInRange);
