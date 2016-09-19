@@ -80,6 +80,7 @@ function getVarriableSymbol(formData) {
   var birthDate = formData['birthDayInfo'].value.toString();
   var email = formData['email'].value;
 
+  var varSymbolIndex = 2;
 
   var uniqueString = '';
   var hashValue = 0;
@@ -87,7 +88,7 @@ function getVarriableSymbol(formData) {
     uniqueString += birthDate + email;
     hashValue = getStringHashCode(uniqueString);
 
-  }while(findRowIndexAndRangeInSheet("money info", hashValue, 2) != null)
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, varSymbolIndex) != null)
 
 
   return hashValue;
