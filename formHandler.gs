@@ -98,6 +98,8 @@ function getBatchSegmentsInfo(formData) {
   var batches = formData['batches'];
   var batchesInfo = getInfoFromIndexes(getBatchesConfig(), batches.value, 'batches');
 
+  var isOnFullBatch = false;
+
   //Figures out individual uninterupted batch segments
   var lastBatchId = -1;
   var numberOfBatches = 0;
@@ -111,6 +113,8 @@ function getBatchSegmentsInfo(formData) {
     lastBatchSegment.push(batchesInfo[i]);
     lastBatchId = batchesInfo[i]['id'];
 
+    if(batchesInfo[i]['full']) { isOnFullBatch = true; }
+
     ++numberOfBatches;
   }
 
@@ -118,7 +122,7 @@ function getBatchSegmentsInfo(formData) {
     'batchSegments': batchSegments,
     'numberOfBatches': numberOfBatches,
     'hrString': batches.originalValue,
-    'manualOverrideReq': false,
+    'manualOverrideReq': isOnFullBatch,
   }
 
 }
@@ -311,17 +315,33 @@ function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInf
 
 function handleManualOverride(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, email, birthDateInfo) {
 
+  var tooOld = false;
+  var fullBatch = false;
+
   if(priceTransportInfo.manualOverrideReq){
     logNeedsAttention(['Non-traditional transport (price not computed automatically), please email user.'], email, variableSymbol);
   }
 
-  if(birthDateInfo.birthDateOk){
+  if(batchesInfo.manualOverrideReq){
+    logNeedsAttention(['User registered on already full batch.', batchesInfo.hrString], email, variableSymbol);
+    fullBatch = true;
+  }
+
+  if(!birthDateInfo.birthDateOk){
+    logNeedsAttention(['User too old, please email user.', birthDateInfo.birthDate], email, variableSymbol);
+    tooOld = true;
+  }
+
+  if(!tooOld && !fullBatch){
     return 'normalEmail';
   }
-  else{
-    logNeedsAttention(['User too old, please email user.', birthDateInfo.birthDate], email, variableSymbol);
+  else if(!tooOld && fullBatch){
+    return 'fullBatch';
+  }
+  else {
     return 'notOldEnough';
   }
+
 }
 
 function saveBankImportantData(summaryVars, email, formId, registrationValid) {

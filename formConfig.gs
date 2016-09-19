@@ -39,6 +39,12 @@ function getTranslationConfig(formID){
                     "30.7.-5.8.2017 (3. turnus)": 2,
                     "6.8.-12.8.2017 (4. turnus)": 3,
                     "13.8.-19.8.2017 (5. turnus)": 4,
+
+                    "16.7.-22.7.2017 (1. turnus) PLNO": 5,
+                    "23.7.-29.7.2017 (2. turnus) PLNO": 6,
+                    "30.7.-5.8.2017 (3. turnus) PLNO": 7,
+                    "6.8.-12.8.2017 (4. turnus) PLNO": 8,
+                    "13.8.-19.8.2017 (5. turnus) PLNO": 9,
                 },
             },
             "transportQuality":{
@@ -110,6 +116,12 @@ function getTranslationConfig(formID){
                     "30.7.-5.8.2017 (3rd batch)": 2,
                     "6.8.-12.8.2017 (4th batch)": 3,
                     "13.8.-19.8.2017 (5th batch)": 4,
+
+                    "16.7.-22.7.2017 (1st batch) FULL": 5,
+                    "23.7.-29.7.2017 (2nd batch) FULL": 6,
+                    "30.7.-5.8.2017 (3rd batch) FULL": 7,
+                    "6.8.-12.8.2017 (4th batch) FULL": 8,
+                    "13.8.-19.8.2017 (5th batch) FULL": 9,
                 },
             },
             "transportQuality":{
@@ -164,7 +176,7 @@ function getTranslationConfig(formID){
 
 function getOtherConfig(){
     return {
-        'lastAlowedBirthdate' : new Date(1986, 7, 01)
+        'lastAlowedBirthdate' : new Date(1986, 7, 1)
     }
 
 }
@@ -173,12 +185,18 @@ function getBatchesConfig(){
     return [
       //Months in dates are zero-based e.g. 0 for January, 11 for December
       //A radší ještě jednou česky, kdyby to někdo přehlédl. Číslování měsíců začíná nulou (leden). Takže tady, v definici turnusů, 6 znamená červenec a 7 znamená srpen. 
-      {"id":1,"starts":new Date(2017, 6, 16),"ends":new Date(2017, 6, 22)},
-      {"id":2,"starts":new Date(2017, 6, 23),"ends":new Date(2017, 6, 29)},
-      {"id":3,"starts":new Date(2017, 6, 30),"ends":new Date(2017, 7, 5)},
-      {"id":4,"starts":new Date(2017, 7, 6),"ends":new Date(2017, 7, 12)},
-      {"id":5,"starts":new Date(2017, 7, 13),"ends":new Date(2017, 7, 19)},
-    ]    
+      {"id":1, "starts":new Date(2017, 6, 16), "ends":new Date(2017, 6, 22), 'full':false},
+      {"id":2, "starts":new Date(2017, 6, 23), "ends":new Date(2017, 6, 29), 'full':false},
+      {"id":3, "starts":new Date(2017, 6, 30), "ends":new Date(2017, 7, 5), 'full':false},
+      {"id":4, "starts":new Date(2017, 7, 6), "ends":new Date(2017, 7, 12), 'full':false},
+      {"id":5, "starts":new Date(2017, 7, 13), "ends":new Date(2017, 7, 19), 'full':false},
+
+      {"id":1, "starts":new Date(2017, 6, 16), "ends":new Date(2017, 6, 22), 'full':true},
+      {"id":2, "starts":new Date(2017, 6, 23), "ends":new Date(2017, 6, 29), 'full':true},
+      {"id":3, "starts":new Date(2017, 6, 30), "ends":new Date(2017, 7, 5), 'full':true},
+      {"id":4, "starts":new Date(2017, 7, 6), "ends":new Date(2017, 7, 12), 'full':true},
+      {"id":5, "starts":new Date(2017, 7, 13), "ends":new Date(2017, 7, 19), 'full':true},
+    ];    
 
 }
 
