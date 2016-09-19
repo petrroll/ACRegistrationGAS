@@ -55,7 +55,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   logSummaryData(summaryVars); runtimeLog(summaryVars);
 
   storeNewRelevantDataToOriginalSheet(formSubmitObj.range, summaryVars);
-  saveBankImportantData(summaryVars, userEmailAddress, formID, (birthDateInfo.birthDateOk && !batchSegmentsInfo.manualOverrideReq));
+  saveBankImportantData(summaryVars, formData['firstName'].value + ' ' + formData['secondName'].value, userEmailAddress, formID, (birthDateInfo.birthDateOk && !batchSegmentsInfo.manualOverrideReq));
 
   var emailType = handleManualOverride(batchSegmentsInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, userEmailAddress, birthDateInfo); runtimeLog(emailType);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID, emailType);
@@ -87,7 +87,7 @@ function getVarriableSymbol(formData) {
     uniqueString += birthDate + email;
     hashValue = getStringHashCode(uniqueString);
 
-  }while(findRowIndexAndRangeInSheet("money info", hashValue, 1) != null)
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, 2) != null)
 
 
   return hashValue;
@@ -344,13 +344,14 @@ function handleManualOverride(batchesInfo, priceAccomodInfo, priceInsuranceInfo,
 
 }
 
-function saveBankImportantData(summaryVars, email, formId, registrationValid) {
+function saveBankImportantData(summaryVars, name, email, formId, registrationValid) {
   var moneyInfoSheetName = 'money info';
 
-  var userDataHeader = ['timestamp', 'id', 'manual override', 'email', 'language', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR', 'registration valid (not too old, ...)'];
+  var userDataHeader = ['timestamp','name', 'id', 'manual override', 'email', 'language', 'final price CZK', 'final price EUR', 'paid CZK', 'paid EUR', 'paid deposit', 'paid everything', 'deposit CZK', 'deposit EUR', 'registration valid (not too old, ...)', 'other notes'];
   createSheetIfDoesntExist(moneyInfoSheetName, userDataHeader);
 
   var moneyInfo = {
+    'name' : name,
     'id' : summaryVars.varSymbol,
     'manualOverrideReq' : false,
     'email' : email,

@@ -107,14 +107,10 @@ function handleAdditionalInfoWhenSendingEurosToCZKAccount(transactionObj){
   
 }
 
-function getVariableSymbolsRows(){
-
-  
-  var tstData = [2, 3, 4];
-  return tstData;
-}
-
 function writeDownTransactionsToBankInfo(transactionDictionary){
+  var varSymbolIndex = 2;
+  var manualOverrideIndex = 3;
+
   var bankSheetRange = getActiveRange('money info');
   if(bankSheetRange == null) { return; } //No info to be processed
 
@@ -124,10 +120,10 @@ function writeDownTransactionsToBankInfo(transactionDictionary){
 
     var bankData = bankSheetData[i];
 
-    var manOverride = bankData[2];
+    var manOverride = bankData[manualOverrideIndex];
     if(manOverride) { continue; }
 
-    var varSymbol = bankData[1];
+    var varSymbol = bankData[varSymbolIndex];
     if(!transactionDictionary.hasOwnProperty(varSymbol)){ continue; }
 
     var transactionsForVarSymbol = transactionDictionary[varSymbol];
@@ -145,27 +141,32 @@ function writeDownTransactionToBankInfo(transactionObj, bankSheetRange, rowIndex
   var sheet = bankSheetRange.getSheet();
   var values = bankSheetRange.getValues()[rowIndexInRange];
   
-  var userEmail = values[3];
-  var userLanguage = values[4];
+  var userEmailIndex = 4;
+  var userLanguageIndex = 5;
+
+  var userEmail = values[userEmailIndex];
+  var userLanguage = values[userLanguageIndex];
+
+  var manualOverrideIndex = 3;
 
   if(transactionObj.currency == 'CZK'){
-    var finalPriceIndex = 5;
-    var alreadyPaidIndex = 7
-    var paidDepositIndex = 9;
-    var paidEverythingIndex = 10;
-    var depositIndex = 11;
+    var finalPriceIndex = 6;
+    var alreadyPaidIndex = 8
+    var paidDepositIndex = 10;
+    var paidEverythingIndex = 11;
+    var depositIndex = 12;
   } 
   else if(transactionObj.currency == 'EUR'){
-    var finalPriceIndex = 6;
-    var alreadyPaidIndex = 8;
-    var paidDepositIndex = 9;
-    var paidEverythingIndex = 10;
-    var depositIndex = 12;
+    var finalPriceIndex = 7;
+    var alreadyPaidIndex = 9;
+    var paidDepositIndex = 10;
+    var paidEverythingIndex = 11;
+    var depositIndex = 13;
   }
   else {
 
     logNeedsAttention(['Someone paid in non-supportd currency.', transactionObj.currency, transactionObj.amount], userEmail, transactionObj.variableSymbol);
-    sheet.getRange(rowIndexInRange + 1, 3).setValue(true);  
+    sheet.getRange(rowIndexInRange + 1, manualOverrideIndex + 1).setValue(true);  
     return;
 
   }

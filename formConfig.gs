@@ -19,6 +19,12 @@ function getTranslationConfig(formID){
             "email":{
                 "title":"E-mail",
             },
+            "firstName":{
+                "title":"Jméno",
+            },
+            "secondName":{
+                "title":"Příjmení",
+            },
             "birthDayInfo":{
                 "title":"Datum narození",
             },
@@ -95,6 +101,12 @@ function getTranslationConfig(formID){
         "en":{
             "email":{
                 "title":"E-mail",
+            },
+            "firstName":{
+                "title":"Name",
+            },
+            "secondName":{
+                "title":"Surname",
             },
             "birthDayInfo":{
                 "title":"Date of birth",
