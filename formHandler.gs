@@ -70,7 +70,7 @@ function getVarriableSymbol(formData) {
     uniqueString += otherData + email;
     hashValue = getStringHashCode(uniqueString);
 
-  }while(findRowIndexAndRangeInSheet("money info", hashValue, 1) != null)
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, 2) != null)
 
 
   return hashValue;
