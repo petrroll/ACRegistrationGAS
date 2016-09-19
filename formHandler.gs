@@ -43,7 +43,7 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var ticketPriceInfo = getTicketPriceInfo(formData, priceConfig);
 
   var userEmailAddress = formData.email.value;
-  var varSymbolId = getStringHashCode(userEmailAddress + formData.numberOfTickets.toString());
+  var varSymbolId = getVarriableSymbol(formData);
 
   var summaryVars = {
     'priceFinalCZK' : ticketPriceInfo.priceCZK,
@@ -57,6 +57,23 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   
   saveBankImportantData(summaryVars, formData['firstName'].value + ' ' + formData['secondName'].value, userEmailAddress, formID, true);
   sendEmailConfirmation(summaryVars, userEmailAddress, formID, 'normal');
+}
+
+function getVarriableSymbol(formData) {
+  var otherData = formData.numberOfTickets.toString();
+  var email = formData.email.value;
+
+
+  var uniqueString = '';
+  var hashValue = 0;
+  do{
+    uniqueString += otherData + email;
+    hashValue = getStringHashCode(uniqueString);
+
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, 1) != null)
+
+
+  return hashValue;
 }
 
 function getTicketPriceInfo(formData, priceConfig){
