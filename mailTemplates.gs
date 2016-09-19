@@ -4,10 +4,11 @@
 
 function getConfirmationEmailTemplate(formID) {
   if (formID == "cz") {
-    return { 'normalEmail' :{
+    return {
+      'normalEmail': {
 
-      'subject': "Albánská výzva 2017 – přijali jsme Tvou přihlášku",
-      'text': "Ahoj!\n\
+        'subject': "Albánská výzva 2017 – přijali jsme Tvou přihlášku",
+        'text': "Ahoj!\n\
 \n\
 Velmi nás těší Tvůj zájem o Albánskou výzvu 2017. Počítáme s Tebou na následující turnusy:\n\
 #stringBatches \n\
@@ -32,10 +33,10 @@ Hezký den, těšíme se na viděnou v Curraji.\n\
 organizační tým Albánské výzvy\n\
 "
       },
-'fullBatch' :{
+      'fullBatch': {
 
-      'subject': ":Nahradnik Albánské výzvy 2017!",
-      'text': "Ahoj!\n\
+        'subject': ":Nahradnik Albánské výzvy 2017!",
+        'text': "Ahoj!\n\
 \n\
 Velmi nás těší Tvůj zájem o Albánskou výzvu 2017. Počítáme s tebou na následující turnusy:\n\
 #stringBatches \n\
@@ -59,10 +60,11 @@ Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stáv
 Hezký den, těším se na viděnou v Curraji\n\
 organizační tým Albánské výzvy\n\
 "
-'notOldEnough' :{
+      },
+      'notOldEnough': {
 
-      'subject': "Albánská výzva – máš správný věk?",
-      'text': "Ahoj!\n\
+        'subject': "Albánská výzva – máš správný věk?",
+        'text': "Ahoj!\n\
 \n\
 Těší nás Tvůj zájem o Albánskou výzvu 2017.\n\
 Albánská výzva je projekt určený především pro mladé lidi od 18 do 30 let. Je-li Ti více než 30 let, doporučujeme sestavit si svou cestovatelskou skupinku a vydat se do Curraje jako turista. Je to krásné místo a návštěva určitě stojí za to! A ve vrstevnické skupince si určitě cestování užijete daleko lépe, než ve skupině mnohem mladších lidí.\n\
@@ -74,13 +76,14 @@ organizační tým Albánské výzvy\n\
 "
       },
     }
-  };
+  }
 
   if (formID == "en") {
-    return { 'normalEmail' :{
+    return {
+      'normalEmail': {
 
-      'subject': "Albanian Challenge – Acknowledgement of application receipt",
-      'text': "Hello!\n\
+        'subject': "Albanian Challenge – Acknowledgement of application receipt",
+        'text': "Hello!\n\
 \n\
 We are very pleased about your interest in Albania Challenge 2017. We count with you on the following batches:\n\
 #stringBatches \n\
@@ -107,10 +110,10 @@ Best Regards, we look forward to seeing you in Curraj i Epërm,\n\
 organization team of Albanian Challenge\n\
 "
       },
-'notOldEnough' :{
+      'notOldEnough': {
 
-      'subject': "Albánská výzva – age limit",
-      'text': "Hello!\n\
+        'subject': "Albánská výzva – age limit",
+        'text': "Hello!\n\
 \n\
 We are very pleased about your interest in Albania Challenge 2017.\n\
 The Albanian Challenge is a project for young people aged between 18 to 30 years. If you're older than 30 years, we recommend you to compile your travels group and go to Albania as a tourist. It's a beautiful place, which is worth a visit! You will certainly enjoy traveling better with your peers than with much younger people.\n\
@@ -144,8 +147,8 @@ Pokud ještě nejsi v naší interní FB skupině, prosím přidej se tam. Stáv
 Přeji Ti hezký den,\n\
 robot Curraj001\n\
 "
-    }
-  };
+    };
+  }
 
   if (formID == "en") {
     return {
@@ -167,8 +170,8 @@ The entire amount should be paid until the end of May.\n\
 Best Regards, \n\
 robot Curraj001\n\
 "
-    }
-  };
+    };
+  }
 
 }
 
@@ -184,8 +187,8 @@ Dneska jsem si všiml, že na účet Albánské výzvy od Tebe přišlo dohromad
 Přeji Ti hezký den a tak trochu Ti závidím ten výlet do Albánie. Mě zavřeli do počítače a na dovolenou mě nechtějí pustit.\n\
 robot Curraj001\n\
 "
-    }
-  };
+    };
+  }
 }
 
 function getNotYetDepositEmail(formID) {
@@ -208,8 +211,8 @@ Až doplatíš zbytek, tak se Ti určitě zase ozvu.\n\
 Tvůj\n\
 robot Curraj001\n\
 "
-    }
-  };
+    };
+  }
 }
 
 function getNotYetEverythingEmail(formID) {
@@ -230,6 +233,6 @@ Až doplatíš zbytek, tak se Ti určitě zase ozvu.\n\
 Tvůj\n\
 robot Curraj001\n\
 "
-    }
-  };
+    };
+  }
 }
