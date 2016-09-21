@@ -60,8 +60,10 @@ function getFormData(formSubmitObj, translationConfig) {
     var titleInForm = translationInfo.title;
     if(!testIfExistsElseLog(titleInForm, ['Missing title in translation config:', propertyName])){continue;}
 
-    var answerArrInForm = formAnswers[titleInForm].filter(function(item) {return (item !== '');});
+    var answerArrInForm = formAnswers[titleInForm];
     if(!testIfExistsElseLog(answerArrInForm, ['Missing answer in form:', propertyName, titleInForm])){continue;}
+
+    answerArrInForm = answerArrInForm.filter(function(item) {return (item !== '');});
 
     //Answers are stored in first element of an array (always)
     var answerInForm = (answerArrInForm.length > 0) ? answerArrInForm[0] : '';
