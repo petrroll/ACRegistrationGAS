@@ -1,5 +1,5 @@
 //MANUÁL
-//Tady se všechno konfiguruje - položky formuláře, termíny turnusů, ceny jednotlivých položek. 
+//Tady se všechno konfiguruje - položky formuláře, ceny jednotlivých položek. 
 //Kdykoliv změníš nějakou kolonku ve formuláři, musíš ji změnit i tady. Jinak to přestane pracovat. Názvy kolonek ve formuláři se musí PŘESNĚ shodovat s jejich pojmenováním tady.
 
 
@@ -7,7 +7,7 @@ function getFormIdConfig(){
     return {
         "uniqueQuestionFormIdTest":{
             "en":"NotImplemented",
-            "cz":"Jméno & příjmení",
+            "cz":"Jméno",
         },
     }
 }
@@ -16,8 +16,13 @@ function getTranslationConfig(formID){
     var translateObj = 
     {
         "cz":{
-            "email":{
-                "title":"E-mail",
+            "gotOverFilter":{
+                "title":"Splňuješ základní podmínku členství – překročil/a jsi již tzv. Přírodní filtr?",
+                "answers":{
+                    "Ano": 1,
+                    "Ne": 0,
+                    "Nevím, co je to přírodní filtr.": 0,
+                },
             },
             "firstName":{
                 "title":"Jméno",
@@ -25,9 +30,9 @@ function getTranslationConfig(formID){
             "secondName":{
                 "title":"Příjmení",
             },
-            "numberOfTickets":{
-                "title":"Počet vstupenek",
-            },           
+            "email":{
+                "title":"E-mail",
+            },
         },
         "en":{},
     };
@@ -38,7 +43,7 @@ function getTranslationConfig(formID){
 
 function getPriceConfig(){
     return {
-        "OneTicketCZK":100,
-        "OneTicketEUR":4,
+        "OneYearCZK":200,
+        "OneYearEUR":7.5,
     }
 }

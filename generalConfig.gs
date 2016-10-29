@@ -1,8 +1,8 @@
 function getGeneralConfig() {
   return {
-    'attentionEmail' : 'houskape@gmail.com',
-    'attentionSubject' : 'AC 2017 - registration needs attention',
-    'replyToEmail' : 'houskape@gmail.com',
+    'attentionEmail' : 'vojtech.kaska@albanianchallenge.org',
+    'attentionSubject' : 'AC Club - registration needs attention',
+    'replyToEmail' : 'vojtech.kaska@albanianchallenge.org',
 
   }
 }

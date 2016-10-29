@@ -40,16 +40,18 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   var priceConfig = getPriceConfig();
 
   var formData = getFormData(formSubmitObj, translationConfig); runtimeLog(formData);
-  var ticketPriceInfo = getTicketPriceInfo(formData, priceConfig);
+  if (formData.gotOverFilter.value != 1) { runtimeLog("Didn't get over filter"); return; }
+
+  var clubPriceInfo = getClubPriceInfo(formData, priceConfig);
 
   var userEmailAddress = formData.email.value;
   var varSymbolId = getVarriableSymbol(formData);
 
   var summaryVars = {
-    'priceFinalCZK' : ticketPriceInfo.priceCZK,
-    'priceFinalEUR' : ticketPriceInfo.priceEUR,
-    'priceDepositCZK' : ticketPriceInfo.priceCZK,
-    'priceDepositEUR' : ticketPriceInfo.priceEUR,
+    'priceFinalCZK' : clubPriceInfo.priceCZK,
+    'priceFinalEUR' : clubPriceInfo.priceEUR,
+    'priceDepositCZK' : clubPriceInfo.priceCZK,
+    'priceDepositEUR' : clubPriceInfo.priceEUR,
     'varSymbol' : varSymbolId
   }
 
@@ -59,11 +61,18 @@ function workOnSendingConfirmationEmail(formSubmitObj, formID) {
   sendEmailConfirmation(summaryVars, userEmailAddress, formID, 'normal');
 }
 
-function getVarriableSymbol(formData) {
-  var otherData = formData.numberOfTickets.toString();
-  var email = formData.email.value;
+function getClubPriceInfo(formData, priceConfig){
 
-  var varSymbolIndex = 2;
+  return {
+    'priceCZK' : priceConfig.OneYearCZK, 
+    'priceEUR' : priceConfig.OneYearEUR
+  };
+
+}
+
+function getVarriableSymbol(formData) {
+  var otherData = formData.firstName.value;
+  var email = formData.email.value;
 
   var uniqueString = '';
   var hashValue = 0;
@@ -71,19 +80,9 @@ function getVarriableSymbol(formData) {
     uniqueString += otherData + email;
     hashValue = getStringHashCode(uniqueString);
 
-  }while(findRowIndexAndRangeInSheet("money info", hashValue, varSymbolIndex) != null)
-
+  }while(findRowIndexAndRangeInSheet("money info", hashValue, 2) != null)
 
   return hashValue;
-}
-
-function getTicketPriceInfo(formData, priceConfig){
-
-  return {
-    'priceCZK' : formData.numberOfTickets.value * priceConfig.OneTicketCZK, 
-    'priceEUR' : formData.numberOfTickets.value * priceConfig.OneTicketEUR
-  };
-
 }
 
 function storeNewRelevantDataToOriginalSheet(currRange, varSymbolId){
