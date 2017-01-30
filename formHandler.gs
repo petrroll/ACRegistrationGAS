@@ -284,8 +284,8 @@ function getTShirtPrice(formData, priceConfig) {
 }
 
 function getConfirmationSummary(batchesInfo, priceAccomodInfo, priceInsuranceInfo, priceTransportInfo, priceTShirtInfo, variableSymbol, priceConfig) {
-  var finalPriceCZK = priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK;
-  var finalPriceEUR = priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR
+  var finalPriceCZK = priceAccomodInfo.priceCZK + priceTransportInfo.priceCZK + priceInsuranceInfo.priceCZK + priceTShirtInfo.priceCZK;
+  var finalPriceEUR = priceAccomodInfo.priceEUR + priceTransportInfo.priceEUR + priceInsuranceInfo.priceEUR + priceTShirtInfo.priceEUR;
 
   var depositCZK = priceConfig['DepositCZK'];
   var depositEUR = priceConfig['DepositEUR'];
